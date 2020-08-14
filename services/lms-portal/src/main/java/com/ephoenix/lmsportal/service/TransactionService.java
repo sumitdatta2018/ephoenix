@@ -88,6 +88,7 @@ public class TransactionService {
 		String udf2 = formParameters.get("udf2").toString();
 		udf2 = udf2.trim().substring(1, udf2.length()-1).trim();
 		log.info("udf2--final-{}", udf2);
+		if("success".equalsIgnoreCase(status)) {
 		
 		List<String> studyIdList = Arrays.asList(udf2.split(","));
 		studyIdList.stream().forEach(studyId -> {
@@ -103,6 +104,7 @@ public class TransactionService {
 			userPreamium.setStudyPlanId(userPreamiumTO.getStudyPlanId());
 			userPreamium.setTId(saveuserTransaction.getTId());
 			userPreamiumRepository.save(userPreamium);
+		}
 		}
 		return userTransactionTO;
 	}

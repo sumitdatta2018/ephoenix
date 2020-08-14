@@ -1,0 +1,43 @@
+.slide-image img {
+    max-height: 300px;
+    width: 100% !important;
+}
+
+.banner-img {
+    text-align: center;
+}
+
+ion-card {
+    width: 100%;
+}
+
+.welcome-content {
+    background-color: cyan;
+    font-size: 40px;
+    font-weight: 600;
+    padding: 20px;
+    color: black;
+}
+
+@media only screen and (min-width: 1200px) {
+    ion-card-content {
+        font-size: 25px;
+        color: black;
+    }
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1199px) {
+    ion-card-content {
+        font-size: 20px;
+        color: black;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    ion-card-content {
+        font-size: 15px;
+        color: black;
+    }
+
+}

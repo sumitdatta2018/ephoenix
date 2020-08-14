@@ -1,0 +1,74 @@
+<app-custom-header></app-custom-header>
+<ion-content>
+  <ion-row>
+    <ion-col size-xl="2" size-lg="2" size-md="1" size="0"></ion-col>
+    <ion-col size-xl="8" size-lg="8" size-md="10" size="12">
+      <ion-card>
+        <ion-card-header class="card-header">
+          <ion-card-title>Rate Master</ion-card-title>
+          <ion-card-subtitle>select class and subject to decide yearly rate</ion-card-subtitle>
+        </ion-card-header>    
+        <ion-card-content>
+          <form [formGroup]="rateMasterForm">
+            <ion-row>
+              <ion-col size-xl="4" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">StudyPlan Type</ion-label>
+                  <ion-select formControlName="studyplanType" (ionChange)="getStudyplanList()">
+                    <ion-select-option [value]="studyplan.studyPlanTypeId" *ngFor="let studyplan of studyplanTypeList">{{studyplan.studyPlanType}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="4" size-lg="6" size-md="12" size="12" *ngIf="rateMasterForm.controls.studyplanType.value === 1">
+                <ion-item>
+                  <ion-label position="floating">Category</ion-label>
+                  <ion-select formControlName="category" (ionChange)="getCategoryRate()">
+                    <ion-select-option [value]="studyPlan.studyPlanId" *ngFor="let studyPlan of studyplanList">{{studyPlan.studyPlanName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="4" size-lg="6" size-md="12" size="12" *ngIf="rateMasterForm.controls.studyplanType.value === 2">
+                <ion-item>
+                  <ion-label position="floating">Class</ion-label>
+                  <ion-select formControlName="class" (ionChange)="getSubjectList()">
+                    <ion-select-option [value]="class.classId" *ngFor="let class of classList">{{class.className}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="4" size-lg="6" size-md="12" size="12" *ngIf="rateMasterForm.controls.studyplanType.value === 2">
+                <ion-item>
+                  <ion-label position="floating">Subject</ion-label>
+                  <ion-select formControlName="subject" (ionChange)="getYearlyRate()">
+                    <ion-select-option [value]="subject.subjectId" *ngFor="let subject of filterSubjectList">{{subject.subjectName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="4" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Price</ion-label>
+                  <ion-input formControlName="price"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col  size-xl="4" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label>Active</ion-label>
+                  <ion-checkbox color="danger" formControlName="active"></ion-checkbox>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-button *ngIf="subjectRate" size="large" shape="round" color="danger" [disabled]="!rateMasterForm.valid" class="mar-top-30 mar-left-10" (click)="updatePrice()">
+                Update Price
+              </ion-button>
+              <ion-button *ngIf="!subjectRate" size="large" shape="round" color="danger" [disabled]="!rateMasterForm.valid" class="mar-top-30 mar-left-10" (click)="updatePrice()">
+                Create Price
+              </ion-button>
+            </ion-row>
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size-xl="2" size-lg="2" size-md="1" size="0"></ion-col>
+  </ion-row>
+</ion-content>
+<app-custom-footer></app-custom-footer>

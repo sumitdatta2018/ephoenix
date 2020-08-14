@@ -1,0 +1,72 @@
+<ion-app>
+    <ion-menu contentId="main-content" type="overlay" swipeGesture="false">
+      <ion-content>
+        <ion-list id="inbox-list">
+          <ion-list-header>{{user}}</ion-list-header>
+          <ion-note>{{email}}</ion-note>
+          <ion-icon *ngIf="showLogout" class="logout" name="log-out-outline" (click)="logout()"></ion-icon>
+          <div *ngFor="let menu of menus; let i = index">
+            <ion-item (click)="openPage(menu)" lines="none" detail="false" [class.selected]="selectedMenu == menu.name">
+              <ion-icon slot="start" name="home-outline" *ngIf="menu.name === 'HOME'"></ion-icon>
+              <ion-icon slot="start" name="people-outline" *ngIf="menu.name === 'ABOUT US'"></ion-icon>
+              <ion-icon slot="start" name="images-outline" *ngIf="menu.name === 'GALLERY'"></ion-icon>
+              <ion-icon slot="start" name="language-outline" *ngIf="menu.name === 'SPOKEN ENGLISH'"></ion-icon>
+              <ion-icon slot="start" name="desktop-outline" *ngIf="menu.name === 'ONLINE MOCKTEST'"></ion-icon>
+              <ion-icon slot="start" name="enter-outline" *ngIf="menu.name === 'LOGIN'"></ion-icon>
+              <ion-icon slot="start" name="person-outline" *ngIf="menu.name === 'ADMIN'"></ion-icon>
+              <ion-icon slot="start" name="school-outline" *ngIf="menu.name === 'STUDENT ZONE'"></ion-icon>
+              <ion-icon slot="start" name="cloud-download-outline" *ngIf="menu.name === 'DOWNLOAD'"></ion-icon>
+              <ion-label>{{menu.label}}</ion-label>
+              <ion-icon slot="end" name="caret-forward-circle-outline" *ngIf="menu.name === 'ABOUT US' && !aboutUsActive"></ion-icon>
+              <ion-icon slot="end" name="caret-down-circle-outline" *ngIf="menu.name === 'ABOUT US' && aboutUsActive"></ion-icon>
+              <ion-icon slot="end" name="caret-forward-circle-outline" *ngIf="menu.name === 'ADMIN' && !adminActive"></ion-icon>
+              <ion-icon slot="end" name="caret-down-circle-outline" *ngIf="menu.name === 'ADMIN' && adminActive"></ion-icon>
+              <ion-icon slot="end" name="caret-forward-circle-outline" *ngIf="menu.name === 'STUDENT ZONE' && !studentActive"></ion-icon>
+              <ion-icon slot="end" name="caret-down-circle-outline" *ngIf="menu.name === 'STUDENT ZONE' && studentActive"></ion-icon>
+              <ion-icon slot="end" name="caret-forward-circle-outline" *ngIf="menu.name === 'DOWNLOAD' && !downloadActive"></ion-icon>
+              <ion-icon slot="end" name="caret-down-circle-outline" *ngIf="menu.name === 'DOWNLOAD' && downloadActive"></ion-icon>
+            </ion-item>
+            <ion-list *ngIf="menu.submenu && selectedMenu == menu.name && aboutUsActive">
+              <ion-item class="mar-left-20" lines="none" (click)="openPage(submenu)" *ngFor="let submenu of menu.submenu" [class.selected]="selectedMenu == submenu.name">
+                <ion-icon slot="start" name="school-outline" *ngIf="submenu.name === 'SCHOLARSHIP'"></ion-icon>
+                <ion-icon slot="start" name="information-circle-outline" *ngIf="submenu.name === 'IMPOTENT LINKS'"></ion-icon>
+                <ion-icon slot="start" name="call-outline" *ngIf="submenu.name === 'CONTACT US'"></ion-icon>
+                <ion-icon slot="start" name="rocket-outline" *ngIf="submenu.name === 'VISION & MISSION'"></ion-icon>
+                <ion-icon slot="start" name="timer-outline" *ngIf="submenu.name === 'HISTORY'"></ion-icon>
+                <ion-icon slot="start" name="earth-outline" *ngIf="submenu.name === 'SOCIETY'"></ion-icon>
+                <ion-icon slot="start" name="book-outline" *ngIf="submenu.name === 'TRAINING'"></ion-icon>
+                <ion-icon slot="start" name="grid-outline" *ngIf="submenu.name === 'OTHERS'"></ion-icon>
+                <ion-label>{{submenu.label}}</ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list *ngIf="menu.submenu && selectedMenu == menu.name && adminActive">
+              <ion-item class="mar-left-20" lines="none" (click)="openPage(submenu)" *ngFor="let submenu of menu.submenu" [class.selected]="selectedMenu == submenu.name">
+                <ion-icon slot="start" name="wallet-outline" *ngIf="submenu.name === 'RATE MASTER'"></ion-icon>
+                <ion-icon slot="start" name="notifications-outline" *ngIf="submenu.name === 'NOTICE MASTER'"></ion-icon>
+                <ion-icon slot="start" name="cloud-upload-outline" *ngIf="submenu.name === 'UPLOAD MASTER'"></ion-icon>
+                <ion-icon slot="start" name="list-outline" *ngIf="submenu.name === 'USER LIST'"></ion-icon>
+                <ion-label>{{submenu.label}}</ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list *ngIf="menu.submenu && selectedMenu == menu.name && studentActive">
+              <ion-item class="mar-left-20" lines="none" (click)="openPage(submenu)" *ngFor="let submenu of menu.submenu" [class.selected]="selectedMenu == submenu.name">
+                <ion-icon slot="start" name="documents-outline" *ngIf="submenu.name === 'STUDY MATERIAL'"></ion-icon>
+                <ion-icon slot="start" name="trail-sign-outline" *ngIf="submenu.name === 'STUDY PLAN'"></ion-icon>
+                <ion-icon slot="start" name="reader-outline" *ngIf="submenu.name === 'RESULT'"></ion-icon>
+                <ion-label>{{submenu.label}}</ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list *ngIf="menu.submenu && selectedMenu == menu.name && downloadActive">
+              <ion-item class="mar-left-20" lines="none" (click)="openPage(submenu)" *ngFor="let submenu of menu.submenu" [class.selected]="selectedMenu == submenu.name">
+                <ion-icon slot="start" name="person-circle-outline" *ngIf="submenu.name === 'IDENTITY CARD'"></ion-icon>
+                <ion-icon slot="start" name="clipboard-outline" *ngIf="submenu.name === 'SAMPLE NOTE'"></ion-icon>
+                <ion-icon slot="start" name="library-outline" *ngIf="submenu.name === 'SYLLABUS'"></ion-icon>
+                <ion-label>{{submenu.label}}</ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app>

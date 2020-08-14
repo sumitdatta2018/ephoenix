@@ -1,17 +1,27 @@
 package com.ephoenix.lmsportal.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -20,6 +30,7 @@ import com.ephoenix.lmsportal.dto.ForgotPasswordTO;
 import com.ephoenix.lmsportal.dto.KeycloakTokenDto;
 import com.ephoenix.lmsportal.dto.KeycloakTokenRequestDto;
 import com.ephoenix.lmsportal.dto.MenuTo;
+import com.ephoenix.lmsportal.dto.OtpTo;
 import com.ephoenix.lmsportal.dto.RoleTo;
 import com.ephoenix.lmsportal.dto.UserLoginTO;
 import com.ephoenix.lmsportal.dto.UserTO;
@@ -38,17 +49,30 @@ import com.ephoenix.lmsportal.repository.RoleMenuMapRepository;
 import com.ephoenix.lmsportal.repository.RoleUserMapRepository;
 import com.ephoenix.lmsportal.repository.UserMasterRepository;
 import com.ephoenix.lmsportal.util.LMSUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 
- * @author arnabn639
- *
- */
 @Slf4j
 @Service
 public class UserLoginService {
+
+	@Value("${otp.expiration.timeout:1}")
+	private Integer timeout;
+
+	@Value("${otp.retry.limit:5}")
+	private Integer retryLimit;
+	
+	@Value("${mail.from:customersupport@ephoenix.org}")
+	private String fromMail;
+
+	@Autowired
+	private HazelcastInstance hzInstance;
+
 	@Autowired
 	private UserMasterRepository userMasterRepository;
 	@Autowired
@@ -68,6 +92,9 @@ public class UserLoginService {
 
 	@Autowired
 	private KeycloakInvoker keycloakInvoker;
+
+	@Autowired
+	private JavaMailSender emailSender;
 
 	public KeycloakTokenDto gettoken(KeycloakTokenRequestDto keycloakTokenRequestDto) {
 		KeycloakTokenDto keycloakTokenDto = null;
@@ -202,6 +229,7 @@ public class UserLoginService {
 		return MessageCode.UM_MESSAGE_CODE002.message();
 	}
 
+	@Transactional
 	public String resetPassword(ForgotPasswordTO forgotPasswordTO) {
 		UserMaster exitingActiveUser = null;
 		if (!StringUtils.isEmpty(forgotPasswordTO.getUsername())) {
@@ -218,10 +246,38 @@ public class UserLoginService {
 		if (!StringUtils.isEmpty(forgotPasswordTO.getOldPassword())) {
 			if (exitingActiveUser.getPassword().equalsIgnoreCase(forgotPasswordTO.getOldPassword())) {
 				keycloakInvoker.resetPassword(forgotPasswordTO.getUsername(), forgotPasswordTO.getNewPassword());
-				return MessageCode.UM_MESSAGE_CODE002.message();
+				return MessageCode.UM_MESSAGE_CODE003.message();
 			}
 
 		} else if (!StringUtils.isEmpty(forgotPasswordTO.getTrackId())) {
+			String userId = exitingActiveUser.getId().toString();
+
+			OtpTo otpTo = null;
+			IMap<String, String> otpCache = hzInstance.getMap("otpCache");
+			if (otpCache.get(userId) != null) {
+				try {
+					otpTo = new ObjectMapper().readValue(otpCache.get(userId), OtpTo.class);
+				} catch (JsonMappingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (otpTo != null && otpTo.getTrackId().equals(forgotPasswordTO.getTrackId())) {
+					String keycloakUserId = keycloakInvoker.fetchKeycloakUserIdByUserLoginId(exitingActiveUser);
+					keycloakInvoker.resetPassword(keycloakUserId, forgotPasswordTO.getNewPassword());
+					exitingActiveUser.setPassword(forgotPasswordTO.getNewPassword());
+					userMasterRepository.save(exitingActiveUser);
+
+					return MessageCode.UM_MESSAGE_CODE003.message();
+				} else {
+					throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE013.name());
+				}
+
+			} else {
+				throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE014.name());
+			}
 
 		} else {
 
@@ -253,6 +309,145 @@ public class UserLoginService {
 			}
 		}
 		return userLoginId;
+	}
+
+	public String generateOtp(String userLoginId) {
+		UserMaster exitingActiveUser = userMasterRepository.findByUserLoginIdIgnoreCaseOrEmailOrMobileAndIsActive(
+				userLoginId, userLoginId, userLoginId, ActiveConstants.ACTIVE.getIsActive());
+
+		if (exitingActiveUser == null) {
+			throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE002.name());
+		}
+		String userId = exitingActiveUser.getId().toString();
+
+		OtpTo otpTo = null;
+		IMap<String, String> otpCache = hzInstance.getMap("otpCache");
+		if (otpCache.get(userId) != null) {
+			try {
+				otpTo = new ObjectMapper().readValue(otpCache.get(userId), OtpTo.class);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+			otpTo = new OtpTo();
+			otpTo.setOtp(new String(generatorOTP(4)));
+			otpTo.setRetrycount(0);
+			otpTo.setRetrycountLimit(retryLimit);
+			otpTo.setUserLoginId(userLoginId);
+			otpCache.lock(userId);
+			otpCache.put(userId, otpTo.toString(), timeout, TimeUnit.MINUTES);
+			otpCache.unlock(userId);
+
+		}
+		if (exitingActiveUser.getEmail() != null) {
+
+			try {
+				MimeMessage mimeMessage = emailSender.createMimeMessage();
+				MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
+				message.setFrom(fromMail);
+				message.setTo(exitingActiveUser.getEmail());
+				message.setSubject("Ephoenix Password Reset Assistance");
+				message.setSentDate(new Date());
+				String emailBodyPlain = String.format(
+						"Dear %s,Greetings from Ephoenix portal service.We have recieved your request for password reset. Your one time password is: %s",
+						exitingActiveUser.getName(), otpTo.getOtp());
+				String emailBodyHtml = String.format(
+						"<html>Dear %s,<br> Greetings from Ephoenix portal service.We have recieved your request for password reset. Your one time password is: %s</html>",
+						exitingActiveUser.getName(), otpTo.getOtp());
+
+				message.setText(emailBodyPlain, emailBodyHtml);
+				emailSender.send(mimeMessage);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+			throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE015.name());
+		}
+
+		return "Your one time password has been sent successfully";
+
+		// TODO Auto-generated method stub
+
+	}
+
+	public ForgotPasswordTO validateOtp(ForgotPasswordTO forgotPasswordTO) {
+		String trackId = "";
+		if (forgotPasswordTO != null && !StringUtils.isEmpty(forgotPasswordTO.getOtp())
+				&& !StringUtils.isEmpty(forgotPasswordTO.getUsername())) {
+			IMap<String, String> otpCache = hzInstance.getMap("otpCache");
+
+			String userLoginId = forgotPasswordTO.getUsername();
+			UserMaster exitingActiveUser = userMasterRepository.findByUserLoginIdIgnoreCaseOrEmailOrMobileAndIsActive(
+					userLoginId, userLoginId, userLoginId, ActiveConstants.ACTIVE.getIsActive());
+
+			if (exitingActiveUser == null) {
+				throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE002.name());
+			}
+			String userId = exitingActiveUser.getId().toString();
+			try {
+				if (otpCache.get(userId) == null) {
+					throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE014.name());
+				}
+				OtpTo otpTo = new ObjectMapper().readValue(otpCache.get(userId), OtpTo.class);
+
+				if (otpTo == null) {
+					throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE014.name());
+				}
+				if (otpTo.getOtp().equals(forgotPasswordTO.getOtp())) {
+					trackId = generateRandomAlphanumericString();
+					otpTo.setTrackId(trackId);
+					otpCache.lock(userId);
+					otpCache.put(userId, otpTo.toString());
+					otpCache.unlock(userId);
+
+				} else {
+					throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE013.name());
+				}
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		forgotPasswordTO.setTrackId(trackId);
+		return forgotPasswordTO;
+
+	}
+
+	public static char[] generatorOTP(int length) {
+		log.info("Your OTP is : ");
+
+		Random obj = new Random();
+		char[] otp = new char[length];
+		for (int i = 0; i < length; i++) {
+			otp[i] = (char) (obj.nextInt(10) + 48);
+		}
+		return otp;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(generateRandomAlphanumericString());
+	}
+
+	public static String generateRandomAlphanumericString() {
+		int leftLimit = 48; // numeral '0'
+		int rightLimit = 122; // letter 'z'
+		int targetStringLength = 10;
+		Random random = new Random();
+
+		String generatedString = random.ints(leftLimit, rightLimit + 1)
+				.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97)).limit(targetStringLength)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+
+		System.out.println(generatedString);
+		return generatedString;
 	}
 
 }

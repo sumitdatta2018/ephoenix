@@ -50,6 +50,14 @@ public class UserMgmtController {
 		GenericResponse<UserTO> response = new GenericResponse<>(user);
 		return new ResponseEntity<GenericResponse<UserTO>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateUserById(@PathVariable Long id,@RequestBody UserTO userTO) {
+		UserTO user = userMgmtService.updateUserById(id,userTO);
+		GenericResponse<UserTO> response = new GenericResponse<>(user);
+		return new ResponseEntity<GenericResponse<UserTO>>(response, HttpStatus.OK);
+	}
+
 
 	
 

@@ -10,12 +10,14 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestParamType;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +51,16 @@ public class UploadController extends RouteBuilder {
 		return new ResponseEntity<GenericResponse<List<UploadTO>>>(response, HttpStatus.OK);
 
 	}
+	
+	@RequestMapping(value = "/api/uploads/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteUploadedDoc(
+			@PathVariable(value = "id", required = true) Long uploadDocId) {
+
+		String deleteUploadedDocMsg = uploadMgmtService.deleteUploadedDoc(uploadDocId);
+		GenericResponse<String> response = new GenericResponse<>(deleteUploadedDocMsg);
+		return new ResponseEntity<GenericResponse<String>>(response, HttpStatus.OK);
+
+	}
 
 	@Override
 	public void configure() throws Exception {
@@ -79,19 +91,29 @@ public class UploadController extends RouteBuilder {
 				InputStream is = exchange.getIn().getBody(InputStream.class);
 				MimeBodyPart mimeMessage = new MimeBodyPart(is);
 				// mimeMessage.
-
+				
 				DataHandler dh = mimeMessage.getDataHandler();
 				exchange.getIn().setBody(dh.getInputStream());
 
 				exchange.getIn().setHeader(Exchange.FILE_NAME, dh.getName());
 				exchange.setProperty("fileName", dh.getName());
+				
 				log.info(exchange.getIn().getHeader("uploadType").toString());
 				if (exchange.getIn().getHeader("uploadType").toString().equalsIgnoreCase("STUDY_MATERIAL")) {
 					exchange.setProperty("upload-dir",
 							LMSUtil.checkTrailingSlash(uploadBaseDir)
 									+ exchange.getIn().getHeader("uploadType").toString() + "/"
 									+ LMSUtil.checkTrailingSlash(exchange.getIn().getHeader("studyPlanId").toString()));
-				} else {
+				} 
+				else if(exchange.getIn().getHeader("uploadType").toString().equalsIgnoreCase("GALLERY")){
+					Tika tika = new Tika();
+					String fileFormat = tika.detect(dh.getInputStream()).split("/")[1];
+					exchange.setProperty("fileFormat",fileFormat);
+					exchange.setProperty("thumbnail-content", LMSUtil.createThumbnail(dh.getInputStream(), 360));
+					exchange.setProperty("upload-dir", LMSUtil.checkTrailingSlash(uploadBaseDir)
+							+ exchange.getIn().getHeader("uploadType").toString());
+				}
+				else {
 					exchange.setProperty("upload-dir", LMSUtil.checkTrailingSlash(uploadBaseDir)
 							+ exchange.getIn().getHeader("uploadType").toString());
 				}

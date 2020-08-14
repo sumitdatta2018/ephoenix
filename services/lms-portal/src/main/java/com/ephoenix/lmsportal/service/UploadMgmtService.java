@@ -1,10 +1,17 @@
 package com.ephoenix.lmsportal.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import javax.transaction.Transactional;
 
 import org.apache.camel.Exchange;
 import org.modelmapper.ModelMapper;
@@ -18,16 +25,13 @@ import com.ephoenix.lmsportal.dto.UploadTO;
 import com.ephoenix.lmsportal.entities.UploadEntity;
 import com.ephoenix.lmsportal.entities.UploadTypeMaster;
 import com.ephoenix.lmsportal.entities.UserStudyMap;
+import com.ephoenix.lmsportal.excp.LMSPortalException;
 import com.ephoenix.lmsportal.generic.code.ActiveConstants;
-import com.ephoenix.lmsportal.repository.ClassMasterRepository;
-import com.ephoenix.lmsportal.repository.RoleMasterRepository;
-import com.ephoenix.lmsportal.repository.RoleUserMapRepository;
+import com.ephoenix.lmsportal.generic.code.ErrorCode;
+import com.ephoenix.lmsportal.generic.code.MessageCode;
 import com.ephoenix.lmsportal.repository.StudyPlanMapRepository;
-import com.ephoenix.lmsportal.repository.TypeMasterRepository;
 import com.ephoenix.lmsportal.repository.UploadMasterRepository;
 import com.ephoenix.lmsportal.repository.UploadTypeMasterRepository;
-import com.ephoenix.lmsportal.repository.UserClassMapRepository;
-import com.ephoenix.lmsportal.repository.UserMasterRepository;
 import com.ephoenix.lmsportal.util.LMSUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +66,25 @@ public class UploadMgmtService {
 		if (exchange.getIn().getHeader("studyPlanId") != null) {
 			studyPlanId = exchange.getIn().getHeader("studyPlanId").toString();
 		}
+		if (exchange.getProperty("thumbnail-content") != null) {
+			String fileFormat = exchange.getProperty("fileFormat").toString();
+			ByteArrayOutputStream thumbnailConIns = (ByteArrayOutputStream) exchange.getProperty("thumbnail-content");
+
+			try {
+				File thumbnailFile = new File(new StringBuffer(uploadDir).append("/").append(fileName.split("\\.")[0])
+						.append("-").append("thumbnail").append(".").append(fileName.split("\\.")[1]).toString());
+				// thumbnailFile.mkdirs() ;
+				OutputStream outputStream = new FileOutputStream(thumbnailFile);
+
+				thumbnailConIns.writeTo(outputStream);
+				outputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
 		UploadTypeMaster uploadTypeMaster = uploadTypeMasterRepository.findByUploadTypeAndIsActive(uploadType,
 				ActiveConstants.ACTIVE.getIsActive());
 
@@ -89,6 +112,12 @@ public class UploadMgmtService {
 		UploadEntity savedUploadEntity = uploadMasterRepository.save(uploadEntity);
 		UploadTO uploadTO = modelMapper.map(savedUploadEntity, UploadTO.class);
 		uploadTO.setCompleteUploadPath(new StringBuffer(serverDns).append(filePath).append(fileName).toString());
+
+		if (uploadTypeMaster.getUploadTypeId().equals(uploadEntity.getUploadTypeId())) {
+			uploadTO.setThumbnailURL(new StringBuffer(serverDns).append(uploadTO.getFilePath())
+					.append(uploadTO.getFileName().split("\\.")[0]).append("-").append("thumbnail").append(".")
+					.append(uploadTO.getFileName().split("\\.")[1]).toString());
+		}
 		return uploadTO;
 
 	}
@@ -96,6 +125,8 @@ public class UploadMgmtService {
 	public List<UploadTO> fetchtAllUploadDocs(List<Long> uploadTypeIds, Long userId) {
 		List<UploadEntity> uploadEntities = new ArrayList<>();
 		List<UploadTO> uploadTOs = new ArrayList<>();
+		UploadTypeMaster uploadTypeMaster = uploadTypeMasterRepository.findByUploadTypeAndIsActive("GALLERY",
+				ActiveConstants.ACTIVE.getIsActive());
 		if (!CollectionUtils.isEmpty(uploadTypeIds)) {
 			uploadEntities = uploadMasterRepository.findByUploadTypeIdInAndIsActive(uploadTypeIds,
 					ActiveConstants.ACTIVE.getIsActive());
@@ -113,9 +144,52 @@ public class UploadMgmtService {
 			UploadTO uploadTO = modelMapper.map(uploadEntity, UploadTO.class);
 			uploadTO.setCompleteUploadPath(new StringBuffer(serverDns).append(uploadTO.getFilePath())
 					.append(uploadTO.getFileName()).toString());
+
+			if (uploadTypeMaster.getUploadTypeId().equals(uploadEntity.getUploadTypeId())) {
+				uploadTO.setThumbnailURL(new StringBuffer(serverDns).append(uploadTO.getFilePath())
+						.append(uploadTO.getFileName().split("\\.")[0]).append("-").append("thumbnail").append(".")
+						.append(uploadTO.getFileName().split("\\.")[1]).toString());
+			}
 			uploadTOs.add(uploadTO);
 		});
 		return uploadTOs;
+
+	}
+
+	@Transactional
+	public String deleteUploadedDoc(Long uploadDocId) {
+		UploadEntity uploadEntity = uploadMasterRepository.findByUploadIdAndIsActive(uploadDocId,
+				ActiveConstants.ACTIVE.getIsActive());
+
+		UploadTypeMaster uploadTypeMaster = uploadTypeMasterRepository.findByUploadTypeAndIsActive("GALLERY",
+				ActiveConstants.ACTIVE.getIsActive());
+		if (uploadEntity == null) {
+			throw new LMSPortalException(ErrorCode.UPMS_ERROR_CODE002.name());
+		}
+		String filePath = uploadEntity.getFilePath();
+		String fileName = uploadEntity.getFileName();
+		
+		try {
+			Files.deleteIfExists(Paths.get(new StringBuffer().append(uploadBaseDir).append(filePath)
+					.append(fileName).toString()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new LMSPortalException(ErrorCode.UPMS_ERROR_CODE003.name());
+		}
+		if (uploadTypeMaster.getUploadTypeId().equals(uploadEntity.getUploadTypeId())) {
+			try {
+				Files.deleteIfExists(Paths.get(new StringBuffer().append(uploadBaseDir).append(filePath)
+						.append(fileName.split("\\.")[0]).append("-").append("thumbnail.")
+						.append(fileName.split("\\.")[1]).toString()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new LMSPortalException(ErrorCode.UPMS_ERROR_CODE004.name());
+			}
+		}
+		uploadMasterRepository.deleteById(uploadDocId);
+		return MessageCode.UPMS_ERROR_CODE001.message();
 
 	}
 

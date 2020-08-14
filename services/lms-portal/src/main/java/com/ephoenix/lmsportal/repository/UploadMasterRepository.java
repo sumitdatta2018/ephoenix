@@ -20,4 +20,6 @@ public interface UploadMasterRepository
 	public List<UploadEntity> findByStudyPlanIdInAndIsActive(List<Long> studyPlanIds, char isActive);
 	public List<UploadEntity> findByIsActive(char isActive);
 
+	public UploadEntity findByUploadIdAndIsActive(Long uploadDocId, Character isActive);
+
 }

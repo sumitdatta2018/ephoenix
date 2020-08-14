@@ -13,4 +13,6 @@ public interface StudyPlanTypeRepository
 	List<StudyPlanTypeMaster> findByStudyPlanTypeIdInAndIsActive(List<Long> studyTypeIds, Character isActive);
 
 	StudyPlanTypeMaster findByStudyPlanTypeIdAndIsActive(Long studyPlanTypeId, Character isActive);
+
+	List<StudyPlanTypeMaster> findByIsActive(Character character);
 }

@@ -1,0 +1,44 @@
+.icon-link {
+    height: 30px;
+    width:  30px;
+    margin: 0px 10px;
+    // padding-top: 10px;
+    // cursor: pointer;
+}
+
+.icon-map {
+    height: 30px;
+    width:  30px;
+    margin: 0px 10px;
+    // padding-top: 5px;
+    // cursor: pointer;
+}
+
+.fb {
+    color: #3b5998 ;
+}
+
+.yt {
+    color: #c4302b ;
+}
+
+.fdb {
+    color: #ffd300;
+}
+
+ion-item {
+    cursor: pointer;
+    direction: rtl;
+}
+
+@media only screen and (max-width: 767px) {
+    span {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    span {
+        display: none;
+    }
+}

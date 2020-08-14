@@ -1,0 +1,55 @@
+ion-card-content {
+    text-align: center;
+}
+
+.notice-status {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 15px;
+    color: #c50000;
+    font-weight: bold;
+}
+
+.start-date {
+    font-size: 15px;
+    color: #00c52a;
+    font-weight: bold;
+}
+
+.end-date {
+    font-size: 15px;
+    color: #c50000;
+    font-weight: bold;
+}
+
+ion-card {
+    cursor: pointer;
+}
+
+ion-card:hover {
+    background-color: #d4bca0;
+}
+
+@media only screen and (min-width: 1200px) {
+    ion-card-content {
+        font-size: 25px;
+        color: black;
+    }
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1199px) {
+    ion-card-content {
+        font-size: 20px;
+        color: black;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    ion-card-content {
+        font-size: 15px;
+        color: black;
+    }
+
+}

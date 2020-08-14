@@ -2,7 +2,9 @@ package com.ephoenix.lmsportal.client;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.core.Response;
 
@@ -22,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.ephoenix.lmsportal.dto.UserTO;
+import com.ephoenix.lmsportal.entities.UserMaster;
 
 @Service
 public class KeycloakInvoker {
@@ -29,9 +32,9 @@ public class KeycloakInvoker {
 	@Autowired
 	private Keycloak keycloak;
 
-	public String getToken(Map<String, String> tokenRequest1) throws Exception{
+	public String getToken(Map<String, String> tokenRequest1) throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response =null;
+		ResponseEntity<String> response = null;
 		MultiValueMap<String, String> tokenRequest = new LinkedMultiValueMap<String, String>();
 		// map.add("email", "first.last@example.com");
 		tokenRequest.add("client_id", tokenRequest1.get("client_id"));
@@ -43,11 +46,11 @@ public class KeycloakInvoker {
 			response = restTemplate.postForEntity(
 					"http://ephoenix.org:7003/auth/realms/ephoenix/protocol/openid-connect/token", tokenRequest,
 					String.class);
-			
+
 		} catch (Exception e) {
 			throw e;
 		}
-		
+
 		return response.getBody();
 	}
 
@@ -82,6 +85,17 @@ public class KeycloakInvoker {
 
 	}
 
+	public String fetchKeycloakUserIdByUserLoginId(UserMaster user) {
+
+		RealmResource realmResource = keycloak.realm("ephoenix");
+		List<UserRepresentation> users = realmResource.users().search(user.getUserLoginId());
+		Optional<UserRepresentation> keycloakUserOpt = users.stream().findFirst();
+		if (keycloakUserOpt.isPresent())
+			return keycloakUserOpt.get().getId();
+		return null;
+
+	}
+
 	public void revokeToken(String token) {
 		TokenManager tokenManager = keycloak.tokenManager();
 		tokenManager.invalidate(token);
@@ -99,28 +113,40 @@ public class KeycloakInvoker {
 				.password("Welcome@1234") //
 				.build();
 
-		UserRepresentation user = new UserRepresentation();
-		user.setEnabled(true);
-		user.setUsername("tester3");
-		user.setFirstName("First");
-		user.setLastName("Last");
-		user.setEmail("tom+tester3@tdlabs.local");
-		user.setAttributes(Collections.singletonMap("origin", Arrays.asList("demo")));
-
-		// Get realm
-		RealmResource realmResource = keycloak.realm("ephoenix");
-		UsersResource userRessource = realmResource.users();
+		/*
+		 * UserRepresentation user = new UserRepresentation(); user.setEnabled(true);
+		 * user.setUsername("tester3"); user.setFirstName("First");
+		 * user.setLastName("Last"); user.setEmail("tom+tester3@tdlabs.local");
+		 * user.setAttributes(Collections.singletonMap("origin",
+		 * Arrays.asList("demo")));
+		 * 
+		 * // Get realm RealmResource realmResource = keycloak.realm("ephoenix");
+		 * UsersResource userRessource = realmResource.users();
+		 */
 
 		// Create user (requires manage-users role)
-		Response response = userRessource.create(user);
-		String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+		/*
+		 * Response response = userRessource.create(user); String userId =
+		 * response.getLocation().getPath().replaceAll(".([^/]+)$", "$1");
+		 * CredentialRepresentation passwordCred = new CredentialRepresentation();
+		 * passwordCred.setTemporary(false);
+		 * passwordCred.setType(CredentialRepresentation.PASSWORD);
+		 * passwordCred.setValue("Welcome@1234");
+		 * 
+		 * // Set password credential
+		 * userRessource.get(userId).resetPassword(passwordCred);
+		 * 
+		 * 
+		 */
+		RealmResource realmResource = keycloak.realm("ephoenix");
+		List<UserRepresentation> users = realmResource.users().search("sumit1", "sumit", "", "sumitdatta2010@gmail.com",
+				0, 10);
+		UsersResource userRessource = realmResource.users();
 		CredentialRepresentation passwordCred = new CredentialRepresentation();
 		passwordCred.setTemporary(false);
 		passwordCred.setType(CredentialRepresentation.PASSWORD);
-		passwordCred.setValue("Welcome@1234");
-
-		// Set password credential
-		userRessource.get(userId).resetPassword(passwordCred);
+		passwordCred.setValue("Welcome@12345");
+		userRessource.get("d28149c0-2f59-418e-8cfa-5f7f59762de7").resetPassword(passwordCred);
 
 	}
 

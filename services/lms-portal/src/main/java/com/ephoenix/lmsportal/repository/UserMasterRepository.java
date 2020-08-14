@@ -22,4 +22,6 @@ public interface UserMasterRepository extends JpaRepository<UserMaster, Long>, J
 
 	UserMaster findByUserLoginIdIgnoreCaseAndIsActiveAndUserTypeId(String userId, Character isActive, Long typeId);
 
+	UserMaster findByIdAndIsActive(Long id, Character isActive);
+
 }

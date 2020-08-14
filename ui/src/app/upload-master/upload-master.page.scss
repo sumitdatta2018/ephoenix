@@ -1,0 +1,29 @@
+ion-item {
+    border: 1px solid coral;
+    border-radius: 50px;
+    margin: 5px;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.labelfile {
+    font-size: 30px;
+    background-color: #eb445a;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 30px;
+    border: 1px solid #eb445a;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.tabs-inner {
+    display: none !important;
+}

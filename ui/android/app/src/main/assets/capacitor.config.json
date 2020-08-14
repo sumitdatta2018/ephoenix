@@ -1,0 +1,13 @@
+{
+  "appId": "com.thephoenix.app",
+  "appName": "Phoenix",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

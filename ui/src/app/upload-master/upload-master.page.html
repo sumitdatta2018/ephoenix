@@ -1,0 +1,68 @@
+<ion-content>
+  <ion-row >
+    <ion-col size-xl="2" size-lg="2" size-md="1" size="0"></ion-col>
+    <ion-col size-xl="8" size-lg="8" size-md="10" size="12">
+      <ion-card>
+        <ion-card-header class="card-header">
+          <ion-card-title>Upload Master</ion-card-title>
+          <ion-card-subtitle>Select Upload type and upload document</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <form [formGroup]="uploadMasterForm">
+            <ion-row>
+              <ion-col size="12">
+                <ion-item>
+                  <ion-label position="floating">Upload Type</ion-label>
+                  <ion-select formControlName="uploadType" (ionChange)="getUploadType()">
+                    <ion-select-option [value]="uploadType.uploadType" *ngFor="let uploadType of uploadTypeList">
+                      {{uploadType.uploadType}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-lg="6" size-md="12" size="12"
+                *ngIf="uploadMasterForm.controls.uploadType.value === 'STUDY_MATERIAL'">
+                <ion-item>
+                  <ion-label position="floating">Class</ion-label>
+                  <ion-select formControlName="class" (ionChange)="getSubjectList()">
+                    <ion-select-option [value]="class.classId" *ngFor="let class of classList">{{class.className}}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-lg="6" size-md="12" size="12"
+                *ngIf="uploadMasterForm.controls.uploadType.value === 'STUDY_MATERIAL'">
+                <ion-item>
+                  <ion-label position="floating">Subject</ion-label>
+                  <ion-select formControlName="subject" (ionChange)="getStudyPlanId()">
+                    <ion-select-option [value]="subject.subjectId" *ngFor="let subject of filterSubjectList">
+                      {{subject.subjectName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="mar-top-20" size="12">
+                <label for="file" class="labelfile"><ion-icon name="document-attach-outline"></ion-icon>Choose a file</label>
+                <input type="file" name="file" id="file" class="inputfile" (change)="onFileSelect($event)" />
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="mar-top-20" *ngIf="fileName" size="12">
+                <ion-item>
+                  <ion-input disabled="true">{{fileName}}</ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-button size="large" shape="round" color="danger" [disabled]="!uploadMasterForm.valid"
+                class="mar-top-30 mar-left-10" (click)="upload()">
+                Upload
+              </ion-button>
+            </ion-row>
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size-xl="2" size-lg="2" size-md="1" size="0"></ion-col>
+  </ion-row>
+</ion-content>

@@ -1,0 +1,18 @@
+<ion-content>
+  <ion-icon class="close" (click)="dismiss()" name="close-circle-outline"></ion-icon>
+  <ion-row>
+    <ion-col>
+      <div>
+        <img *ngIf="url" [src]="url">
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-button size="large" shape="round" color="danger" class="mar-top-30 mar-left-10" (click)="downloadFile()">
+        <ion-icon slot="end" name="cloud-download-outline"></ion-icon>
+        Download
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>

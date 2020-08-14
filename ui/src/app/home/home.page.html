@@ -1,0 +1,38 @@
+<app-custom-header></app-custom-header>
+<ion-content>
+  <ion-row>
+    <ion-col class="banner-img">
+      <img width="100%" src="./assets/imgs/banner.jpg">
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col style="margin-right: 20px;">
+      <ion-card class="welcome-content">
+        <ion-card-content>
+          The Phoenix an institute where everyone will surely find a safe shelter. Here one word is important to us,our teachers known best how to make one successful.Here they always try their best to show you the right way by which your effort can easily be fruitful. 
+          <br>
+          <br>
+          So, come immediately / take admission/be powerful/and reanimate yourself/like a phoenix /and be successful.
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-slides pager="true" #bannerSlide [options]="slideOpts">
+        <ion-slide *ngFor="let notice of noticeList">
+          <ion-card>
+            <ion-card-header class="card-header">
+              <ion-card-title>{{notice.title}}</ion-card-title>
+              <ion-card-subtitle>{{notice.subTitle}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              {{notice.body}}
+            </ion-card-content>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+    </ion-col>
+  </ion-row>
+</ion-content>
+<app-custom-footer></app-custom-footer>

@@ -1,11 +1,22 @@
 package com.ephoenix.lmsportal.util;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.imageio.ImageIO;
+
+import org.apache.tika.Tika;
+import org.imgscalr.Scalr;
 
 import com.ephoenix.lmsportal.excp.LMSPortalException;
 import com.ephoenix.lmsportal.generic.code.ErrorCode;
@@ -51,5 +62,22 @@ public class LMSUtil {
                    return "Issue while encoding" +e.getMessage();  
               }  
     }
+	
+	public static ByteArrayOutputStream createThumbnail(InputStream orginalFile, Integer width) throws IOException{  
+		Tika tika = new Tika();
+		List<String> contentTypeList = Stream.of("jpg", "png","jpeg","mp4","avi")
+			      .collect(Collectors.toList());
+		String mimeType = tika.detect(orginalFile).split("/")[1];
+		if(!contentTypeList.contains(mimeType)) {
+			throw new LMSPortalException(ErrorCode.UPMS_ERROR_CODE001.name());
+		}
+		
+	    ByteArrayOutputStream thumbOutput = new ByteArrayOutputStream();  
+	    BufferedImage thumbImg = null;  
+	    BufferedImage img = ImageIO.read(orginalFile);  
+	    thumbImg = Scalr.resize(img, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, width, Scalr.OP_ANTIALIAS);  
+	    ImageIO.write(thumbImg, mimeType , thumbOutput);  
+	    return thumbOutput;  
+	}
 
 }

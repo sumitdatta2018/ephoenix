@@ -18,7 +18,7 @@ public class UploadTO extends BaseTO {
 	 */
 	private static final long serialVersionUID = 4159902773954114504L;
 
-	
+	private Long uploadId;
 	private Long uploadTypeId;
 	
 	private Long studyPlanId;
@@ -30,6 +30,8 @@ public class UploadTO extends BaseTO {
 	private String fileContent;
 	
 	private String completeUploadPath;
+	
+	private String thumbnailURL;
 	
 	
 	

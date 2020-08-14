@@ -48,7 +48,33 @@ public class UserMaster extends BaseEntity implements Serializable {
 	@NotEmpty(message="Name should not be empty")
 	@Column(name = "NAME")
 	private String name;
-
+	
+	
+	@Column(name = "FATHER_NAME")
+	private String fatherName;
+	
+	@Column(name = "MOTHER_NAME")
+	private String mothername;
+	
+	@Column(name = "DOB")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "IST")
+	private Date dob;
+	
+	@Column(name = "LAST_QUALIFICATION")
+	private String lastQualification;
+	
+	@Column(name = "AADHAR_NUM")
+	private String aadharNum;
+	
+	@Column(name = "GENDER")
+	private String gender;
+	
+	@Column(name = "CASTE_ID")
+	private Long casteId;
+	
+	@Column(name = "RELIGION_ID")
+	private Long religionId;
+	
 	@Email
 	@Column(name = "EMAIL_ID")
 	private String email;
@@ -60,6 +86,12 @@ public class UserMaster extends BaseEntity implements Serializable {
 	@Column(name = "ADDRESS")
 	private String address;
 
+	@Column(name = "CITY")
+	private String city;
+	
+	@Column(name = "DISTRICT")
+	private String district;
+	
 	@Column(name = "DISTRICT_ID")
 	private Long districtId;
 	

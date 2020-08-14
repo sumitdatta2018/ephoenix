@@ -1,0 +1,446 @@
+https://ephoenix.org:7004/api/master-data?types=STUDY_PLAN_TYPE (GET)
+Response :
+{
+	"success": true,
+	"payload": {
+		"STUDY_PLAN_TYPE": [{
+			"studyPlanTypeId": 1,
+			"studyPlanType": "OTHERS"
+		}, {
+			"studyPlanTypeId": 2,
+			"studyPlanType": "CLASS_SUBJECT"
+		}]
+	}
+}
+
+URL: https://ephoenix.org:7004/api/studyplans?userId=3 (GET)
+RESPONSE: 
+
+{
+	"success": true,
+	"payload": [{
+		"studyPlanId": 1,
+		"studyPlanTypeId": 1,
+		"priceRateYearly": 1,
+		"isDefault": "Y",
+		"studyPlanType": "OTHERS",
+		"studyPlanName": "SPOKEN_ENGLISH"
+	}]
+}
+
+
+
+URL: https://ephoenix.org:7004/api/studyplans (POST)
+
+REQUEST:
+[{
+		"studyPlanTypeId": 1,
+		"priceRateYearly": 1,
+		"isDefault": "N",
+		"studyPlanType": "OTHERS",
+		"studyPlanName": "ENGLISH_COMMUNICATION"
+}
+]
+
+RESPONSE:
+{
+    "success": true,
+    "payload": [
+        {
+            "studyPlanId": 2,
+            "studyPlanTypeId": 1,
+            "priceRateYearly": 1,
+            "isDefault": "N",
+            "studyPlanName": "ENGLISH_COMMUNICATION"
+        }
+    ]
+}
+
+https://ephoenix.org:7004/api/studyplans/{studyPlanId} PUT
+{
+	
+		"studyPlanTypeId": 1,
+		"priceRateYearly": 3,
+		"isDefault": "Y",
+		"studyPlanName": "ENGLISH_COMMUNICATION"
+	}
+
+
+------For Upload functionalities ----
+
+URL : https://ephoenix.org:7004/api/master-data?types=UPLOAD_TYPE (GET)
+
+{
+	"success": true,
+	"payload": {
+		"UPLOAD_TYPE": [{
+			"uploadTypeId": 2,
+			"uploadType": "SAMPLE NOTE"
+		}, {
+			"uploadTypeId": 3,
+			"uploadType": "SYLLABUS"
+		}, {
+			"uploadTypeId": 4,
+			"uploadType": "IDENTITY CARD"
+		}, {
+			"uploadTypeId": 5,
+			"uploadType": "STUDY_MATERIAL"
+		}]
+	}
+}
+
+
+
+URL: https://ephoenix.org:7004/camel/upload/{uploadType}?studyPlanId=4 (POST)
+example : https://ephoenix.org:7004/camel/upload/STUDY_MATERIAL?studyPlanId=4 , studyPlanId is only required if its uploadType=STUDY_MATERIAL
+
+URL: https://ephoenix.org:7004/api/uploads
+{
+	"success": true,
+	"payload": [{
+		"uploadTypeId": 5,
+		"studyPlanId": 2,
+		"fileName": "Spring in Action, 5th Edition (1).pdf",
+		"filePath": "/STUDY_MATERIAL/2/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/2/Spring in Action, 5th Edition (1).pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 3,
+		"fileName": "kibana-6.8.9-linux-x86_64 (1).tar.gz",
+		"filePath": "/STUDY_MATERIAL/3/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/3/kibana-6.8.9-linux-x86_64 (1).tar.gz"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 3,
+		"fileName": "spring-integration-in-action.pdf",
+		"filePath": "/STUDY_MATERIAL/3/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/3/spring-integration-in-action.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 4,
+		"fileName": "spring-integration-in-action.pdf",
+		"filePath": "/STUDY_MATERIAL/4/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/4/spring-integration-in-action.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 4,
+		"fileName": "Ansible_Presentation.pdf",
+		"filePath": "/STUDY_MATERIAL/4/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/4/Ansible_Presentation.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 4,
+		"fileName": "Axis_AMRUT_UDD_Maharashtra_WebPortal_SRS v1.0 (4) (1).docx",
+		"filePath": "/STUDY_MATERIAL/4/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/4/Axis_AMRUT_UDD_Maharashtra_WebPortal_SRS v1.0 (4) (1).docx"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 33,
+		"fileName": "AXIS_Implementation_Processes_AS_IS.pptx",
+		"filePath": "/STUDY_MATERIAL/33/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/33/AXIS_Implementation_Processes_AS_IS.pptx"
+	}, {
+		"uploadTypeId": 2,
+		"fileName": "terraform-up-and-running.pdf",
+		"filePath": "/SAMPLE NOTE/",
+		"completeUploadPath": "https://ephoenix.org/uploads/SAMPLE NOTE/terraform-up-and-running.pdf"
+	}, {
+		"uploadTypeId": 2,
+		"fileName": "PayUMoney-Technical-Integration-Document.pdf",
+		"filePath": "/SAMPLE NOTE/",
+		"completeUploadPath": "https://ephoenix.org/uploads/SAMPLE NOTE/PayUMoney-Technical-Integration-Document.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 36,
+		"fileName": "swiggy-order-65205377054.pdf",
+		"filePath": "/STUDY_MATERIAL/36/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/36/swiggy-order-65205377054.pdf"
+	}, {
+		"uploadTypeId": 6,
+		"fileName": "error.PNG",
+		"filePath": "/GALLERY/",
+		"completeUploadPath": "https://ephoenix.org/uploads/GALLERY/error.PNG"
+	}]
+}
+
+
+
+
+URL: https://ephoenix.org:7004/api/uploads?uploadTypeIds=5
+
+{
+	"success": true,
+	"payload": [{
+		"uploadTypeId": 5,
+		"studyPlanId": 2,
+		"fileName": "Spring in Action, 5th Edition (1).pdf",
+		"filePath": "/STUDY_MATERIAL/2/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/2/Spring in Action, 5th Edition (1).pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 3,
+		"fileName": "kibana-6.8.9-linux-x86_64 (1).tar.gz",
+		"filePath": "/STUDY_MATERIAL/3/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/3/kibana-6.8.9-linux-x86_64 (1).tar.gz"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 3,
+		"fileName": "spring-integration-in-action.pdf",
+		"filePath": "/STUDY_MATERIAL/3/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/3/spring-integration-in-action.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 4,
+		"fileName": "spring-integration-in-action.pdf",
+		"filePath": "/STUDY_MATERIAL/4/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/4/spring-integration-in-action.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 4,
+		"fileName": "Ansible_Presentation.pdf",
+		"filePath": "/STUDY_MATERIAL/4/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/4/Ansible_Presentation.pdf"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 4,
+		"fileName": "Axis_AMRUT_UDD_Maharashtra_WebPortal_SRS v1.0 (4) (1).docx",
+		"filePath": "/STUDY_MATERIAL/4/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/4/Axis_AMRUT_UDD_Maharashtra_WebPortal_SRS v1.0 (4) (1).docx"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 33,
+		"fileName": "AXIS_Implementation_Processes_AS_IS.pptx",
+		"filePath": "/STUDY_MATERIAL/33/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/33/AXIS_Implementation_Processes_AS_IS.pptx"
+	}, {
+		"uploadTypeId": 5,
+		"studyPlanId": 36,
+		"fileName": "swiggy-order-65205377054.pdf",
+		"filePath": "/STUDY_MATERIAL/36/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/36/swiggy-order-65205377054.pdf"
+	}]
+}
+
+URL: https://localhost:7004/api/uploads?userId=14
+
+{
+	"success": true,
+	"payload": [{
+		"uploadTypeId": 5,
+		"studyPlanId": 33,
+		"fileName": "AXIS_Implementation_Processes_AS_IS.pptx",
+		"filePath": "/STUDY_MATERIAL/33/",
+		"completeUploadPath": "https://ephoenix.org/uploads/STUDY_MATERIAL/33/AXIS_Implementation_Processes_AS_IS.pptx"
+	}]
+}
+
+URL: https://localhost:7004/api/logout POST
+
+{
+	"token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRbVJ6ekN0bVZVOXcyUVNaTmxRcTNGbVEyVmJJczVjT2cyOExmclZsaF80In0.eyJleHAiOjE1OTU2ODg4OTcsImlhdCI6MTU5NTY4NzY5NywianRpIjoiMTk0MTkxOTEtNmZhYy00MjdlLThiNjktN2RlMDZmOTMyMThiIiwiaXNzIjoiaHR0cDovL2VwaG9lbml4Lm9yZzo3MDAzL2F1dGgvcmVhbG1zL2VwaG9lbml4IiwiYXVkIjpbInJlYWxtLW1hbmFnZW1lbnQiLCJhY2NvdW50Il0sInN1YiI6ImY0YjRkZGE2LTBkY2QtNGIzYS05ZThkLWQzZWQ2ZjRiMzVjZCIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVwaG9lbml4Iiwic2Vzc2lvbl9zdGF0ZSI6IjQzZDhhNGUwLTIxODQtNDA3YS05OWI1LWEzMjk4N2UwOTU5OSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7InJlYWxtLW1hbmFnZW1lbnQiOnsicm9sZXMiOlsidmlldy1pZGVudGl0eS1wcm92aWRlcnMiLCJ2aWV3LXJlYWxtIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJyZWFsbS1hZG1pbiIsImNyZWF0ZS1jbGllbnQiLCJtYW5hZ2UtdXNlcnMiLCJxdWVyeS1yZWFsbXMiLCJ2aWV3LWF1dGhvcml6YXRpb24iLCJxdWVyeS1jbGllbnRzIiwicXVlcnktdXNlcnMiLCJtYW5hZ2UtZXZlbnRzIiwibWFuYWdlLXJlYWxtIiwidmlldy1ldmVudHMiLCJ2aWV3LXVzZXJzIiwidmlldy1jbGllbnRzIiwibWFuYWdlLWF1dGhvcml6YXRpb24iLCJtYW5hZ2UtY2xpZW50cyIsInF1ZXJ5LWdyb3VwcyJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoic2FuZGlwIGR1dHRhIiwicHJlZmVycmVkX3VzZXJuYW1lIjoibWVzYW5kaXAuZHV0dGFAZ21haWwuY29tIiwiZ2l2ZW5fbmFtZSI6InNhbmRpcCIsImZhbWlseV9uYW1lIjoiZHV0dGEiLCJlbWFpbCI6Im1lc2FuZGlwLmR1dHRhQGdtYWlsLmNvbSJ9.uKNUizHBsk0NuTMps7QX_gJaxmgyys9K3tGwr-iPP0AC5xp9WmJgLrWXK067VpNC06ADSk0PSTUJlXXMjZkoIuDTcold1TtrywPAxaHCK6n80iz7h5IGCV46bsu3kneQRlgQ0LRS9Th9EGRQMqYW_gsXdNkhqnPj5OSWgXwEbnPtl9lI6pzjkgNN3K_WHsFsGhDPkKEpgZn2KwO4-VgN80pZ_k3xbhX_7ifwrRCL0FCy8tgZ9pwAI4YqnDfwGOCeCBNcVUVLHpeO3xU69KPb-sc58mwpMPG_lzPknJwalSCEocu5QU04lo-zeA29rKqxDbyQ4T970jwBqgsuuKLrfw"
+}
+
+URL: https://ephoenix.org:7004/api/users/1
+{
+    "success": true,
+    "payload": {
+        "userLoginId": "SYSTEM_ADMIN",
+        "id": 1,
+        "password": "Welcome@1234",
+        "name": "ADMIN",
+        "email": "sumitdatta2018@gmail.com",
+        "mobile": "9038484565",
+        "address": "Bally",
+        "pin": "711201",
+        "userTypeId": 1
+    }
+}
+
+URL: https://ephoenix.org:7004/api/users/6
+REQUEST: 
+
+{
+
+	"address": "SALTLAKE1",
+	"pin": "711201",
+
+	"fatherName": "test",
+
+	"mothername": "test",
+
+	"dob": "01/01/2000",
+
+	"lastQualification": "test",
+
+	"aadharNum": "test",
+
+	"casteId": 1,
+
+	"religionId": 1
+
+}
+
+RESPONSE:
+
+{
+    "success": true,
+    "payload": {
+        "userLoginId": "sumit1",
+        "id": 6,
+        "password": "Welcome@1234",
+        "name": "sandip",
+        "fatherName": "test",
+        "mothername": "test",
+        "dob": "01/01/2000",
+        "lastQualification": "test",
+        "aadharNum": "test",
+        "casteId": 1,
+        "religionId": 1,
+        "email": "sandipdutta2014@gmail.com",
+        "mobile": "9037414364",
+        "address": "SALTLAKE1",
+        "pin": "711201",
+        "userTypeId": 2,
+        "isActive": "Y"
+    }
+}
+
+URL: https://ephoenix.org:7004/api/notice POST
+REQUEST: 
+
+{
+	"title": "test notice test",
+	"subTitle": "test notice subTitle",
+	"body": "test notice body",
+	"startDate": "03/02/2020",
+	"endDate": "03/09/2020",
+	"isActive": "Y"
+
+}
+
+RESPONSE:
+{
+    "success": true,
+    "payload": {
+        "noticeId": 6,
+        "title": "test notice test",
+        "subTitle": "test notice subTitle",
+        "body": "test notice body",
+        "startDate": "03/02/2020",
+        "endDate": "03/09/2020",
+        "isActive": "Y"
+    }
+}
+URL: https://ephoenix.org:7004/api/notice GET
+
+
+{
+	"success": true,
+	"payload": [{
+		"noticeId": 4,
+		"title": "test notice test15",
+		"subTitle": "test notice subTitle5",
+		"body": "test notice body5",
+		"startDate": "07/08/2020",
+		"endDate": "03/09/2020",
+		"isActive": "Y"
+	}, {
+		"noticeId": 5,
+		"title": "test notice test",
+		"subTitle": "test notice subTitle",
+		"body": "test notice body",
+		"startDate": "03/02/2020",
+		"endDate": "03/09/2020",
+		"isActive": "Y"
+	}, {
+		"noticeId": 6,
+		"title": "test notice test",
+		"subTitle": "test notice subTitle",
+		"body": "test notice body",
+		"startDate": "03/02/2020",
+		"endDate": "03/09/2020",
+		"isActive": "Y"
+	}]
+}
+
+
+URL: https://ephoenix.org:7004/api/notice/{noticeid} POST
+
+REQUEST:
+
+{
+
+	"title": "test notice test15",
+	"subTitle": "test notice subTitle5",
+	"body": "test notice body5",
+	"startDate": "07/08/2020",
+	"endDate": "03/09/2020",
+	"isActive": "Y"
+
+}
+
+RESPONSE:
+{
+    "success": true,
+    "payload": {
+        "noticeId": 6,
+        "title": "test notice test",
+        "subTitle": "test notice subTitle",
+        "body": "test notice body",
+        "startDate": "03/02/2020",
+        "endDate": "03/09/2020",
+        "isActive": "Y"
+    }
+}
+
+URL: https://ephoenix.org:7004/api/otp/generate POST
+
+REQUEST:
+{
+	"username": "sumit0190"
+}
+RESPONSE:
+{
+    "success": true,
+    "payload": "Your one time password has been sent successfully"
+}
+
+URL: https://ephoenix.org:7004/api/otp/validate POST
+REQUEST:
+{
+	"username": "sumit0190",
+	"otp":"1444"
+}
+
+RESPONSE:
+{
+    "success": true,
+    "payload": {
+        "username": "sumit0190",
+        "trackId": "LeF1wSgkta",
+        "otp": "1444"
+    }
+}
+
+URL: https://ephoenix.org:7004/api/reset POST
+REQUEST:
+{
+      "username": "sumit0190",
+      "trackId": "LeF1wSgkta",
+       "newPassword": "Welcome@123456"
+}
+RESPONSE:
+
+{
+    "success": true,
+    "payload": "Password Reset Successful"
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,137 @@
+<app-custom-header></app-custom-header>
+<ion-content>
+  <ion-row>
+    <ion-col size-xl="2" size-lg="2" size-md="1" size="0"></ion-col>
+    <ion-col size-xl="8" size-lg="8" size-md="10" size="12">
+      <ion-card >
+        <ion-card-header class="card-header">
+          <ion-card-title>Spoken English Registration</ion-card-title>
+          <ion-card-subtitle>Fill the below form to register</ion-card-subtitle>
+        </ion-card-header>   
+        <ion-card-content>
+          <form [formGroup]="registrationForm">
+            <ion-row>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Name</ion-label>
+                  <ion-input formControlName="name" disabled></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Gender</ion-label>
+                  <ion-select formControlName="gender">
+                    <ion-select-option value="male">MALE</ion-select-option>
+                    <ion-select-option value="female">FEMALE</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Father's Name</ion-label>
+                  <ion-input formControlName="fatherName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Mother's Name</ion-label>
+                  <ion-input formControlName="motherName"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Address</ion-label>
+                  <ion-input formControlName="address" disabled></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">State</ion-label>
+                  <ion-select formControlName="state" (ionChange)="selectState()" disabled>
+                    <ion-select-option [value]="state.stateId" *ngFor="let state of stateList">{{state.stateName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12" *ngIf="showDistrict">
+                <ion-item>
+                  <ion-label position="floating">District</ion-label>
+                  <ion-select formControlName="district" disabled>
+                    <ion-select-option [value]="district.districtId" *ngFor="let district of districtList">{{district.districtName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12" *ngIf="!showDistrict">
+                <ion-item>
+                  <ion-label position="floating">District</ion-label>
+                  <ion-input formControlName="district" disabled></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Pin</ion-label>
+                  <ion-input formControlName="pin" disabled></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Date Of Birth</ion-label>
+                  <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dob"></ion-datetime>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Qualification</ion-label>
+                  <ion-input formControlName="qualification"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Religion</ion-label>
+                  <ion-select formControlName="religion">
+                    <ion-select-option [value]="religion.religionId" *ngFor="let religion of religionList">{{religion.religionName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Caste</ion-label>
+                  <ion-select formControlName="caste">
+                    <ion-select-option [value]="caste.casteId" *ngFor="let caste of casteList">{{caste.casteName}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Aadhaar No</ion-label>
+                  <ion-input formControlName="aadhaar"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Email</ion-label>
+                  <ion-input formControlName="email" disabled></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size-xl="6" size-lg="6" size-md="12" size="12">
+                <ion-item>
+                  <ion-label position="floating">Phone</ion-label>
+                  <ion-input formControlName="phone" disabled></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size-lg="6" size-md="12" size="12">
+                <ion-button color="danger" size="large" shape="round" expand="block" class="mar-top-30" (click)="register()" [disabled]="!registrationForm.valid">
+                  <ion-icon slot="end" name="create-outline"></ion-icon>
+                  Register
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size-xl="8" size-lg="2" size-md="1" size="0"></ion-col>
+  </ion-row>
+</ion-content>
+<app-custom-footer></app-custom-footer>

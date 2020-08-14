@@ -1,13 +1,16 @@
 package com.ephoenix.lmsportal.dto;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 import com.ephoenix.lmsportal.util.AttributeEncryptor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +36,26 @@ public class UserTO extends BaseTO {
 
 	@NotEmpty(message = "Name should not be empty")
 	private String name;
+
+	private String fatherName;
+
+	private String mothername;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "IST")
+	private Date dob;
+
+	private String lastQualification;
+
+	private String aadharNum;
+	private String gender;
+
+	private Long casteId;
+
+	private Long religionId;
+	
+	private String city;
+	
+	private String district;
 
 	@Email
 	private String email;
@@ -63,5 +86,6 @@ public class UserTO extends BaseTO {
 	private List<MenuTo> menus;
 
 	private Long classID;
+	private Character isActive='Y';
 
 }

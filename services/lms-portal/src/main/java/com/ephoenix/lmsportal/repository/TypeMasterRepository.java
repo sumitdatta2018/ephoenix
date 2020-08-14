@@ -12,5 +12,6 @@ public interface TypeMasterRepository extends JpaRepository<TypeMaster, Long>, J
 	
 	TypeMaster findByTypeNameIgnoreCaseAndIsActive(String typeName, char c);
 	List<TypeMaster> findByTypeNameInAndIsActive(List<String> typeName, char c);
+	List<TypeMaster> findByIsActive(Character character);
 
 }

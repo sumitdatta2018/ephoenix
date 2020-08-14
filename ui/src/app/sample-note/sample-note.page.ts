@@ -1,0 +1,148 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonDataService } from '../providers/common-data.service';
+import { Platform, ModalController, NavController, AlertController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { AppConstant } from '../app.constant';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { Downloader, NotificationVisibility, DownloadRequest } from '@ionic-native/downloader/ngx';
+
+@Component({
+  selector: 'app-sample-note',
+  templateUrl: './sample-note.page.html',
+  styleUrls: ['./sample-note.page.scss'],
+})
+export class SampleNotePage implements OnInit {
+  notelist = [];
+  fileTransfer: FileTransferObject;
+  constructor(private commonDataService: CommonDataService,
+    public platform: Platform,
+    public modalController: ModalController,
+    public alertController: AlertController,
+    private androidPermissions: AndroidPermissions,
+    private transfer: FileTransfer,
+    private file: File,
+    private downloader: Downloader,
+    private navCtrl: NavController, private localStorage: Storage) {
+    this.fileTransfer = this.transfer.create();
+    this.commonDataService.loadMenus();
+    this.commonDataService.loadUser();
+    this.localStorage.get('access_token').then(token => {
+      if (token) {
+        AppConstant.access_token = token;
+        this.getNoteData();
+      }
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  getNoteData() {
+    this.commonDataService.presentLoading();
+    const url = AppConstant.appURL + AppConstant.uploadList + '?uploadTypeIds=2';
+    this.commonDataService.secureGetService(url).subscribe(data => {
+      this.commonDataService.dismissLoading();
+      if (data && data.success) {
+        this.notelist = data.payload;
+        this.notelist = this.notelist.map(upload => {
+          let file = upload.fileName.split('.');
+          return {
+            ...upload,
+            fileExt: file.pop()
+          }
+        })
+      } else {
+        if (data && data.error) {
+          this.commonDataService.presentAlert(data.error.message)
+        } else if (!data) {
+          this.navCtrl.navigateRoot('login');
+          this.localStorage.clear();
+        }
+      }
+    },
+      error => {
+        this.navCtrl.navigateRoot('login');
+        this.localStorage.clear();
+      });
+  }
+
+  async downloadFile(file) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: "The Phoenix",
+      message: "Do you want to download",
+      buttons: [
+        {
+          text: 'Yes',
+          handler: (blah) => {
+            if (this.platform.is('android') && !this.platform.is('mobileweb')) {
+              this.getPermission(file.completeUploadPath, file.fileName)
+            } else {
+              this.commonDataService.presentLoading();
+              fetch(file.completeUploadPath).then(function (t) {
+                return t.blob().then((b) => {
+                  var a = document.createElement("a");
+                  a.href = URL.createObjectURL(b);
+                  a.setAttribute("download", file.fileName);
+                  a.click();
+                  this.commonDataService.dismissLoading();
+                }
+                );
+              });
+            }
+          }
+        }, {
+          text: 'No',
+          handler: () => {
+
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async downloadFileMobile(path, fileName) {
+    this.commonDataService.presentLoading();
+
+    let request: DownloadRequest = {
+      uri: encodeURI(path),
+      title: fileName,
+      description: '',
+      mimeType: '',
+      visibleInDownloadsUi: true,
+      notificationVisibility: NotificationVisibility.VisibleNotifyCompleted,
+      destinationUri: this.file.externalRootDirectory + '/Download/Phoenix/' + fileName,
+    };
+    this.downloader.download(request)
+      .then((location: string) => {
+        this.commonDataService.dismissLoading();
+        this.commonDataService.presentAlert('File downloaded at:' + location);
+      })
+      .catch((error: any) => {
+        console.error(error);
+        this.commonDataService.dismissLoading();
+      });
+  }
+
+  getPermission(path, fileName) {
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+      .then(status => {
+        if (status.hasPermission) {
+          this.downloadFileMobile(path, fileName);
+        }
+        else {
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+            .then(status => {
+              if (status.hasPermission) {
+                this.downloadFileMobile(path, fileName);
+              }
+            });
+        }
+      });
+  }
+
+}

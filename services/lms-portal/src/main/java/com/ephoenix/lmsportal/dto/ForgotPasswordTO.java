@@ -11,4 +11,5 @@ public class ForgotPasswordTO extends BaseTO {
 	private String trackId;
 	private String oldPassword;
 	private String newPassword;
+	private String otp;
 }

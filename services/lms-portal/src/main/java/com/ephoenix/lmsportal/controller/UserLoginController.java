@@ -64,5 +64,21 @@ public class UserLoginController {
 		GenericResponse<String> response = new GenericResponse<>(msg);
 		return new ResponseEntity<GenericResponse<String>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/otp/generate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<String>> generateOtp(@RequestBody ForgotPasswordTO forgotPasswordTO) {
+
+		String msg = userLoginService.generateOtp(forgotPasswordTO.getUsername());
+		GenericResponse<String> response = new GenericResponse<>(msg);
+		return new ResponseEntity<GenericResponse<String>>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/otp/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<ForgotPasswordTO>> validateOtp(@RequestBody ForgotPasswordTO forgotPasswordTO) {
+
+		ForgotPasswordTO validateOtpResp = userLoginService.validateOtp(forgotPasswordTO);
+		GenericResponse<ForgotPasswordTO> response = new GenericResponse<>(validateOtpResp);
+		return new ResponseEntity<GenericResponse<ForgotPasswordTO>>(response, HttpStatus.OK);
+	}
 
 }

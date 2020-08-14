@@ -1,0 +1,32 @@
+.file-img {
+    margin: 10px 0px;
+    width: 150px;
+}
+
+div {
+    text-align: center;
+}
+
+ion-item {
+    border: 1px solid coral;
+    border-radius: 50px;
+    margin: 5px;
+}
+
+ion-card {
+    cursor: pointer;
+}
+
+ion-card:hover {
+    background-color: #d4bca0;
+}
+
+.delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 30px;
+    color: #c50000;
+    font-weight: bold;
+    background-color: bisque;
+}

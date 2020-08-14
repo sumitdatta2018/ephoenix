@@ -1,0 +1,18 @@
+div {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.close {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    z-index: 10;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.modal-wrapper.sc-ion-modal-md {
+    width: 750px;
+}
