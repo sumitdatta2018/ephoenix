@@ -1,28 +1,49 @@
 <ion-footer>
-  <ion-row>
-    <ion-col offset-xl="4" size-xl="2" size-md="3" size="3">
-      <ion-item lines="none" (click)="openFB('ThePhoenixHelpline')">
-        <ion-icon class="icon-link fb" name="logo-facebook"></ion-icon>
-        <span class="fb">Follow Us</span>
-      </ion-item>
+  <!-- <ion-row>
+    <ion-col>
+      <ul>
+        <li><a href="" (click)="openFB('ThePhoenixHelpline')"><img src="./assets/imgs/fb.png" ></a></li>
+        <li><a href="#" (click)="openYT('UC6v1wd5bKwlgX1H_PPxZkZQ')"><img src="./assets/imgs/youtube.png" ></a></li>
+        <li><a href="#" (click)="openMap()"><img src="./assets/imgs/location.png" ></a></li>
+        <li><a href="#" (click)="feedback()"><img src="./assets/imgs/feedback.png" ></a></li>
+      </ul>
     </ion-col>
-    <ion-col size-xl="2" size-md="3" size="3">
-      <ion-item lines="none" (click)="openYT('UC6v1wd5bKwlgX1H_PPxZkZQ')">
-        <ion-icon class="icon-link yt" name="logo-youtube"></ion-icon>
-        <span  class="yt">Subcribe Us</span>
-      </ion-item>
+  </ion-row> -->
+  <ion-row class="ion-justify-content-end">
+    <ion-col size-md="3" size="12">
+      <ion-row class="ion-justify-content-end">
+        <ion-col size-md="3" size="3">
+          <ion-item lines="none" (click)="openFB('ThePhoenixHelpline')">
+            <!-- <ion-icon class="icon-link fb" name="logo-facebook"></ion-icon>
+            <span class="fb">Follow Us</span> -->
+            <img src="./assets/imgs/fb.png" >
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size="3">
+          <ion-item lines="none" (click)="openYT('UC6v1wd5bKwlgX1H_PPxZkZQ')">
+            <!-- <ion-icon class="icon-link yt" name="logo-youtube"></ion-icon>
+            <span  class="yt">Subcribe Us</span> -->
+            <img src="./assets/imgs/youtube.png" >
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size="3">
+          <ion-item lines="none" (click)="openMap()">
+            <!-- <img src="./assets/imgs/maps.png" class="icon-map">
+            <span>Locate Us</span> -->
+            <img src="./assets/imgs/location.png" >
+          </ion-item>
+        </ion-col>
+        <ion-col size-md="3" size="3">
+          <ion-item lines="none" (click)="feedback()">
+            <!-- <ion-icon class="icon-link fdb" name="chatbubbles-outline"></ion-icon>
+            <span class="fdb">Feedback</span> -->
+            <img src="./assets/imgs/feedback.png" >
+          </ion-item>
+        </ion-col>
+      </ion-row>
     </ion-col>
-    <ion-col size-xl="2" size-md="3" size="3">
-      <ion-item lines="none" (click)="openMap()">
-        <img src="./assets/imgs/maps.png" class="icon-map">
-        <span>Locate Us</span>
-      </ion-item>
-    </ion-col>
-    <ion-col size-xl="2" size-md="3" size="3">
-      <ion-item lines="none" (click)="feedback()">
-        <ion-icon class="icon-link fdb" name="chatbubbles-outline"></ion-icon>
-        <span class="fdb">Feedback</span>
-      </ion-item>
-    </ion-col>
+  </ion-row>
+  <ion-row class="ion-justify-content-end">
+    
   </ion-row>
 </ion-footer>
