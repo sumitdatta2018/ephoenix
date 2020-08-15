@@ -30,7 +30,15 @@ ion-item {
     cursor: pointer;
     direction: rtl;
 }
-
+ion-footer.md.footer-md.hydrated {
+    background: #2e2e2e;
+}
+ion-item {
+    --ion-background-color: #2e2e2e;
+}
+ion-item img {
+    width: 30px;
+}
 @media only screen and (max-width: 767px) {
     span {
         font-size: 14px;
