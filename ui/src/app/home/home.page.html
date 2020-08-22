@@ -26,14 +26,14 @@
         </ion-card-content> -->
     </ion-col>
   </ion-row>
-  <ion-row>
+  <ion-row class="slider">
     <ion-col>
       <ion-slides pager="true" #bannerSlide [options]="slideOpts">
         <ion-slide *ngFor="let notice of noticeList">
           <ion-card>
             <ion-card-header class="card-header">
               <ion-card-title>{{notice.title}}</ion-card-title>
-              <ion-card-subtitle>{{notice.subTitle}}</ion-card-subtitle>
+              <ion-card-subtitle class="subtitle">{{notice.subTitle}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
               {{notice.body}}

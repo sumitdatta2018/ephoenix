@@ -22,11 +22,19 @@ ion-card {
     padding: 0;
     font-family: 'Roboto', sans-serif;
 }
-
+.slider {
+    background: #de09a4;
+}
+.slider ion-card {
+    box-shadow: none !important;
+}
+.subtitle {
+    color: #fff;
+}
 @media only screen and (min-width: 1200px) {
     ion-card-content {
         font-size: 25px;
-        color: black;
+        color: #fff;
     }
     ion-row.about-row {
         padding: 50px 9% 0;
@@ -39,7 +47,7 @@ ion-card {
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
     ion-card-content {
         font-size: 20px;
-        color: black;
+        color: #fff;
     }
     
 }
@@ -47,7 +55,7 @@ ion-card {
 @media only screen and (max-width: 768px) {
     ion-card-content {
         font-size: 15px;
-        color: black;
+        color: #fff;
     }
 
 }
