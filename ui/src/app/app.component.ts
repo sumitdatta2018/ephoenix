@@ -145,10 +145,11 @@ export class AppComponent implements OnInit {
       this.menuCtrl.close();
     } else if (menu.name === 'ONLINE MOCKTEST') {
       this.commonDataService.presentAlert('Coming Soon, development is going on');
+      this.menuCtrl.close();
     } else if (menu.name === 'SCHOLARSHIP') {
       this.navCtrl.navigateForward('scholarship');
       this.menuCtrl.close();
-    } else if (menu.name === 'IMPOTENT LINKS') {
+    } else if (menu.name === 'IMPORTANT LINKS') {
       this.navCtrl.navigateForward('important-link');
       this.menuCtrl.close();
     } else if (menu.name === 'CONTACT US') {
@@ -189,8 +190,13 @@ export class AppComponent implements OnInit {
       this.menuCtrl.close();
     } else if (menu.name === 'RESULT') {
       this.commonDataService.presentAlert('Coming Soon, development is going on');
+      this.menuCtrl.close();
     } else if (menu.name === 'USER LIST') {
-      this.commonDataService.presentAlert('Coming Soon, development is going on');
+      this.navCtrl.navigateForward('user-management');
+      this.menuCtrl.close();
+    } else if (menu.name === 'FEEDBACK LIST') {
+      this.navCtrl.navigateForward('feedback-list');
+      this.menuCtrl.close();
     }
   }
 

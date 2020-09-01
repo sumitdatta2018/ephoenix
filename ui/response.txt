@@ -436,6 +436,114 @@ RESPONSE:
     "payload": "Password Reset Successful"
 }
 
+URL: https://ephoenix.org:7004/api/users?isAssociatedWithSpokenEnglish=true
+URL: URL: https://ephoenix.org:7004/api/users
+
+REQUEST:
+{
+	"success": true,
+	"payload": {
+		"content": [{
+			"userLoginId": "sandip",
+			"id": 3,
+			"password": "Welcome@1234",
+			"name": "sandip",
+			"city": "KOLKATA",
+			"district": "WB",
+			"email": "sandipdutta2011@gmail.com",
+			"mobile": "9038484564",
+			"address": "SALTLAKE",
+			"districtId": 1,
+			"stateId": 1,
+			"pin": "711201",
+			"userTypeId": 2,
+			"isActive": "Y"
+		}],
+		"pageable": {
+			"sort": {
+				"sorted": false,
+				"unsorted": true,
+				"empty": true
+			},
+			"pageNumber": 0,
+			"pageSize": 20,
+			"offset": 0,
+			"unpaged": false,
+			"paged": true
+		},
+		"totalElements": 7,
+		"last": true,
+		"totalPages": 1,
+		"sort": {
+			"sorted": false,
+			"unsorted": true,
+			"empty": true
+		},
+		"numberOfElements": 7,
+		"first": true,
+		"size": 20,
+		"number": 0,
+		"empty": false
+	}
+}
+
+URL: https://ephoenix.org:7004/api/userfeedback/{userId}
+https://localhost:7004/api/userfeedback/1
+RESPONSE
+{
+	"success": true,
+	"payload": {
+		"feedbackID": 1,
+		"description": "test feedback",
+		"suggestion": "test suggestion",
+		"rating": 4
+	}
+}
+
+URL: https://ephoenix.org:7004/api/userfeedback
+REQUEST:
+{
+	"description": "test feedback",
+	"suggestion": "test suggestion",
+	"rating": 4,
+	"userId": 1
+}
+RESPONSE: 
+{
+    "success": true,
+    "payload": {
+        "feedbackID": 1,
+        "description": "test feedback",
+        "suggestion": "test suggestion",
+        "rating": 4
+    }
+}
+
+URL: https://ephoenix.org:7004/api/userfeedback
+{
+	"success": true,
+	"payload": [{
+		"feedbackID": 22,
+		"description": "test feedback",
+		"suggestion": "test suggestion",
+		"rating": 4
+	}, {
+		"feedbackID": 23,
+		"description": "test feedback",
+		"suggestion": "test suggestion",
+		"rating": 4
+	}, {
+		"feedbackID": 24,
+		"description": "Test",
+		"suggestion": "Test",
+		"rating": 10
+	}]
+}
+
+
+
+
+
 
 
 

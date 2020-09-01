@@ -21,6 +21,8 @@ export const AppConstant = {
     'generateOtp': 'otp/generate',
     'validateOtp': 'otp/validate',
     'resetPassword': 'reset',
+    'userlist': 'users',
+    'userfeedback': 'userfeedback',
     /********************************************* CONSTANT DATA ******************************************/
     'name': '',
     'email': '',
@@ -28,5 +30,6 @@ export const AppConstant = {
     'menuResponse': '',
     'access_token': '',
     'usernameforReset': '',
-    'trackId': ''
+    'trackId': '',
+    'mobilePopUpShown': false,
 }

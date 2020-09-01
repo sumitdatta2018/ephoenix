@@ -20,18 +20,16 @@ public class UploadTO extends BaseTO {
 
 	private Long uploadId;
 	private Long uploadTypeId;
-	
 	private Long studyPlanId;
-
 	private String fileName;
-	
 	private String filePath;
-	
 	private String fileContent;
-	
 	private String completeUploadPath;
-	
 	private String thumbnailURL;
+	private String className;
+	private String subjectName;
+	
+	
 	
 	
 	

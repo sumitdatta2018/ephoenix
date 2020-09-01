@@ -7,11 +7,22 @@
     <ion-card-content>
       <ion-item lines="none">
         <ion-label position="floating">Description</ion-label>
-        <ion-textarea autoGrow="true" placeholder="Enter information here..."></ion-textarea>
+        <ion-textarea autoGrow="true" [(ngModel)]="description" placeholder="Enter information here..."></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label position="floating">Suggestion</ion-label>
+        <ion-textarea autoGrow="true" [(ngModel)]="suggestion" placeholder="Enter information here..."></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-label>Rating</ion-label>
+        <ion-range [(ngModel)]="rating" min="1" max="10" step="1" pin="true" snaps="true" ticks="true" color="danger">
+          <ion-label slot="start">1</ion-label>
+          <ion-label slot="end">10</ion-label>
+        </ion-range>
       </ion-item>
     </ion-card-content>
   </ion-card>
-  <ion-button color="primary" class="fdb-button" size="large">
+  <ion-button size="large" shape="round" color="danger" class="fdb-button" size="large" [disabled]="!description && !suggestion" (click)="feedback()">
     <ion-icon slot="end" name="paper-plane-outline"></ion-icon>
     Feedback
   </ion-button>

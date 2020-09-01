@@ -14,6 +14,10 @@
     // cursor: pointer;
 }
 
+.play-batch {
+    width: 40% !important;
+}
+
 .fb {
     color: #3b5998 ;
 }
@@ -37,7 +41,7 @@ ion-item {
     --ion-background-color: #2e2e2e;
 }
 ion-item img {
-    width: 30px;
+    width: 50px;
 }
 @media only screen and (max-width: 767px) {
     span {
@@ -48,5 +52,17 @@ ion-item img {
 @media only screen and (max-width: 576px) {
     span {
         display: none;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .play-batch {
+        width: 50% !important;
+    }
+}
+
+@media only screen and (min-width: 1600px) {
+    .play-batch {
+        width: 40% !important;
     }
 }

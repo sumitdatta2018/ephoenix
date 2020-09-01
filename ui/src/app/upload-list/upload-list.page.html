@@ -49,7 +49,7 @@
         <ion-col *ngFor="let upload of filteredUploadList" size-xl="4" size-md="6" size="12">
           <ion-card>
             <div (click)="downloadFile(upload)">
-              <img class="file-img" *ngIf="upload.fileExt === 'pdf'" src="./assets/imgs/pdf-icon.png">
+              <img class="file-img" *ngIf="upload.fileExt === 'pdf'" src="./assets/imgs/pdf.png">
               <img class="file-img" *ngIf="upload.fileExt === 'docx' || upload.fileExt === 'doc'"
                 src="./assets/imgs/word-doc-icon.png">
               <img class="file-img" *ngIf="upload.fileExt === 'xlsx' || upload.fileExt === 'xls'"

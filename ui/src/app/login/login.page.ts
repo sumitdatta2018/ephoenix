@@ -90,4 +90,8 @@ export class LoginPage implements OnInit {
     this.navCtrl.navigateForward('forgot-password');
   }
 
+  goToHome() {
+    this.navCtrl.navigateRoot('home');
+  }
+
 }

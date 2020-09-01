@@ -50,11 +50,13 @@ public class UserTO extends BaseTO {
 	private String gender;
 
 	private Long casteId;
+	private String casteName;
 
 	private Long religionId;
-	
+	private String religionName;
+
 	private String city;
-	
+
 	private String district;
 
 	@Email
@@ -86,6 +88,6 @@ public class UserTO extends BaseTO {
 	private List<MenuTo> menus;
 
 	private Long classID;
-	private Character isActive='Y';
+	private Character isActive = 'Y';
 
 }

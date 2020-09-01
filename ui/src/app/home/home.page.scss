@@ -5,6 +5,7 @@
 
 .banner-img {
     text-align: center;
+    margin-top: 10px;
 }
 
 ion-card {
@@ -13,28 +14,44 @@ ion-card {
 
 .welcome-content {
     background-color: #f0f0f0;
-    font-size: 15px !important;
+    font-size: 25px !important;
     font-weight: 400 !important;
     padding: 20px;
     color: black;
     border-radius: 0;
     margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'phoenix-font' !important;
+    border-radius: 10px;
 }
+
 .slider {
-    background: #de09a4;
+    // background: #de09a4;
 }
 .slider ion-card {
-    box-shadow: none !important;
+    font-family: 'phoenix-font' !important;
+    background-color: #d7d8da63;
+    box-shadow: none;
+    ion-card-title {
+        font-size: 35px;
+        font-weight: 600;
+    }
+    ion-card-subtitle   {
+        color: black;
+        font-size: 20px;
+    }
+    ion-card-content {
+        font-size: 25px;
+        color: black;
+    }
 }
 .subtitle {
-    color: #fff;
+    // color: #fff;
 }
+
 @media only screen and (min-width: 1200px) {
     ion-card-content {
         font-size: 25px;
-        color: #fff;
+        color: black
     }
     ion-row.about-row {
         padding: 50px 9% 0;
@@ -47,7 +64,7 @@ ion-card {
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
     ion-card-content {
         font-size: 20px;
-        color: #fff;
+        color: black
     }
     
 }
@@ -55,7 +72,7 @@ ion-card {
 @media only screen and (max-width: 768px) {
     ion-card-content {
         font-size: 15px;
-        color: #fff;
+        color: black
     }
 
 }

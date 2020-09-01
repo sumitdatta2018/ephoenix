@@ -2,7 +2,8 @@ package com.ephoenix.lmsportal.generic.code;
 
 public enum ErrorCode {
 	UNKNOWN(""), UMS_ERROR_CODE001("Profile locked for 24 hours, Proceed to unlock account?"),
-	UMS_ERROR_CODE002("Invalid Userid. Please try again."), UMS_ERROR_CODE003("Incorrect password. %s"),
+	UMS_ERROR_CODE002("Invalid Userid. Please try again."), 
+	UMS_ERROR_CODE003("Incorrect password. %s"),
 	UMS_ERROR_CODE004("Account will be locked for 24 hours after %d more failed attempt(s)."),
 	UMS_ERROR_CODE005("No Roles Available"), UMS_ERROR_CODE006("User is inactive"),
 	UMS_ERROR_CODE007("Old Password does not match"),

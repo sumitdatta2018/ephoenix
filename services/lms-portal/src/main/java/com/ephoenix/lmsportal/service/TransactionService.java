@@ -17,7 +17,7 @@ import com.ephoenix.lmsportal.entities.UserTransaction;
 import com.ephoenix.lmsportal.excp.LMSPortalException;
 import com.ephoenix.lmsportal.generic.code.ActiveConstants;
 import com.ephoenix.lmsportal.repository.UserMasterRepository;
-import com.ephoenix.lmsportal.repository.StudyPlanMapRepository;
+import com.ephoenix.lmsportal.repository.UserStudyPlanMapRepository;
 import com.ephoenix.lmsportal.repository.UserTransactionRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class TransactionService {
 	private ModelMapper modelMapper;
 
 	@Autowired
-	private StudyPlanMapRepository userPreamiumRepository;
+	private UserStudyPlanMapRepository userPreamiumRepository;
 
 	@Autowired
 	private UserTransactionRepository userTransactionRepository;

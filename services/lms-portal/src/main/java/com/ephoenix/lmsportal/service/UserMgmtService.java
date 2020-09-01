@@ -1,15 +1,23 @@
 package com.ephoenix.lmsportal.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.ephoenix.lmsportal.client.KeycloakInvoker;
 import com.ephoenix.lmsportal.dto.UserTO;
+import com.ephoenix.lmsportal.entities.CasteMaster;
+import com.ephoenix.lmsportal.entities.ReligionMaster;
 import com.ephoenix.lmsportal.entities.RoleMaster;
 import com.ephoenix.lmsportal.entities.RoleUserMap;
 import com.ephoenix.lmsportal.entities.TypeMaster;
@@ -18,6 +26,8 @@ import com.ephoenix.lmsportal.excp.LMSPortalException;
 import com.ephoenix.lmsportal.generic.code.ActiveConstants;
 import com.ephoenix.lmsportal.generic.code.ErrorCode;
 import com.ephoenix.lmsportal.generic.code.ICommonConstants;
+import com.ephoenix.lmsportal.repository.CasteMasterRepository;
+import com.ephoenix.lmsportal.repository.ReligionMasterRepository;
 import com.ephoenix.lmsportal.repository.RoleMasterRepository;
 import com.ephoenix.lmsportal.repository.RoleUserMapRepository;
 import com.ephoenix.lmsportal.repository.TypeMasterRepository;
@@ -42,6 +52,12 @@ public class UserMgmtService {
 
 	@Autowired
 	private RoleMasterRepository roleMasterRepository;
+
+	@Autowired
+	private ReligionMasterRepository religionMasterRepository;
+
+	@Autowired
+	private CasteMasterRepository casteMasterRepository;
 
 	@Value("${cms.file.upload.path}")
 	private String cmsFilePath;
@@ -89,6 +105,7 @@ public class UserMgmtService {
 		userTO = modelMapper.map(savedUserMaster, UserTO.class);
 
 		keycloakInvoker.createKeycloakUser(userTO);
+
 		return userTO;
 	}
 
@@ -96,6 +113,16 @@ public class UserMgmtService {
 		Optional<UserMaster> userMasterOpt = userMasterRepository.findById(id);
 		UserTO user = modelMapper.map(userMasterOpt.get(), UserTO.class);
 		// TODO Auto-generated method stub
+
+		if (user.getReligionId() != null) {
+			ReligionMaster religionMaster = religionMasterRepository.findByReligionId(user.getReligionId());
+			user.setReligionName(religionMaster.getReligionName());
+
+		}
+		if (user.getCasteId() != null) {
+			CasteMaster casteMaster = casteMasterRepository.findByCasteId(user.getCasteId());
+			user.setCasteName(casteMaster.getCasteName());
+		}
 
 		return user;
 	}
@@ -106,37 +133,69 @@ public class UserMgmtService {
 		if (userMaster == null) {
 			throw new LMSPortalException(ErrorCode.UMS_ERROR_CODE002.name());
 		}
-		userMaster.setAadharNum(userTO.getAadharNum()!=null?userTO.getAadharNum():userMaster.getAadharNum());
-		userMaster.setAddress(userTO.getAddress()!=null?userTO.getAddress():userMaster.getAddress());
-		userMaster.setCity(userTO.getCity()!=null?userTO.getCity():userMaster.getCity());
-		userMaster.setDistrict(userTO.getDistrict()!=null?userTO.getDistrict():userMaster.getDistrict());
-		userMaster.setCasteId(userTO.getCasteId()!=null?userTO.getCasteId():userMaster.getCasteId());
-		userMaster.setContact(userTO.getContact()!=null?userTO.getContact():userMaster.getContact());
-		userMaster.setDistrictId(userTO.getDistrictId()!=null? userTO.getDistrictId():userMaster.getDistrictId());
-		userMaster.setDob(userTO.getDob()!=null?userTO.getDob():userMaster.getDob());
-		userMaster.setFatherName(userTO.getFatherName()!=null?userTO.getFatherName():userMaster.getFatherName());
-		userMaster.setMothername(userTO.getMothername()!=null?userTO.getMothername():userMaster.getMothername());
-		userMaster.setInstituteName(userTO.getInstituteName()!=null?userTO.getInstituteName():userMaster.getInstituteName());
-		userMaster.setIsActive(userTO.getIsActive()!=null?userTO.getIsActive():userMaster.getIsActive());
-		userMaster.setLastQualification(userTO.getLastQualification()!=null?userTO.getLastQualification():userMaster.getLastQualification());
-		userMaster.setPin(userTO.getPin()!=null?userTO.getPin():userMaster.getPin());
-		userMaster.setGender(userTO.getGender()!=null?userTO.getGender():userMaster.getGender());
-		userMaster.setReligionId(userTO.getReligionId()!=null?userTO.getReligionId():userMaster.getReligionId());
-		userMaster.setStateId(userTO.getStateId()!=null?userTO.getStateId():userMaster.getStateId());
+		userMaster.setAadharNum(userTO.getAadharNum() != null ? userTO.getAadharNum() : userMaster.getAadharNum());
+		userMaster.setAddress(userTO.getAddress() != null ? userTO.getAddress() : userMaster.getAddress());
+		userMaster.setCity(userTO.getCity() != null ? userTO.getCity() : userMaster.getCity());
+		userMaster.setDistrict(userTO.getDistrict() != null ? userTO.getDistrict() : userMaster.getDistrict());
+		userMaster.setCasteId(userTO.getCasteId() != null ? userTO.getCasteId() : userMaster.getCasteId());
+		userMaster.setContact(userTO.getContact() != null ? userTO.getContact() : userMaster.getContact());
+		userMaster.setDistrictId(userTO.getDistrictId() != null ? userTO.getDistrictId() : userMaster.getDistrictId());
+		userMaster.setDob(userTO.getDob() != null ? userTO.getDob() : userMaster.getDob());
+		userMaster.setFatherName(userTO.getFatherName() != null ? userTO.getFatherName() : userMaster.getFatherName());
+		userMaster.setMothername(userTO.getMothername() != null ? userTO.getMothername() : userMaster.getMothername());
+		userMaster.setInstituteName(
+				userTO.getInstituteName() != null ? userTO.getInstituteName() : userMaster.getInstituteName());
+		userMaster.setIsActive(userTO.getIsActive() != null ? userTO.getIsActive() : userMaster.getIsActive());
+		userMaster.setLastQualification(userTO.getLastQualification() != null ? userTO.getLastQualification()
+				: userMaster.getLastQualification());
+		userMaster.setPin(userTO.getPin() != null ? userTO.getPin() : userMaster.getPin());
+		userMaster.setGender(userTO.getGender() != null ? userTO.getGender() : userMaster.getGender());
+		userMaster.setReligionId(userTO.getReligionId() != null ? userTO.getReligionId() : userMaster.getReligionId());
+		userMaster.setStateId(userTO.getStateId() != null ? userTO.getStateId() : userMaster.getStateId());
 		UserMaster savedUserMaster = userMasterRepository.save(userMaster);
 		UserTO savedUserTo = modelMapper.map(savedUserMaster, UserTO.class);
 
 		return savedUserTo;
 	}
-	
-	/*public UserTO fetchUserAllUser(Long id) {
-		
-		Optional<UserMaster> userMasterOpt = userMasterRepository.find(id);
-		UserTO user = modelMapper.map(userMasterOpt.get(), UserTO.class);
-		// TODO Auto-generated method stub
 
-		return user;
-	}*/
-	
+	public Page<UserTO> getUsers(boolean isAssociatedWithSpokenEnglish, Pageable pageable) {
+		List<UserTO> users = new ArrayList<UserTO>();
+		Pageable pageableDerieved;
+		// TODO Auto-generated method stub
+		if (!isAssociatedWithSpokenEnglish) {
+			Page<UserMaster> userPage = userMasterRepository.findAll(pageable);
+			pageableDerieved = userPage.getPageable();
+			userPage.get().forEach(userEnt -> {
+				UserTO userTO = modelMapper.map(userEnt, UserTO.class);
+				users.add(userTO);
+			});
+		} else {
+			Page<UserMaster> userPage = userMasterRepository.findUsersAssociatedWithSpokenEnglish(pageable);
+			pageableDerieved = userPage.getPageable();
+			userPage.get().forEach(userEnt -> {
+				UserTO userTO = modelMapper.map(userEnt, UserTO.class);
+				users.add(userTO);
+			});
+		}
+
+		return new PageImpl<>(users, pageableDerieved, users.size());
+	}
+
+	/*
+	 * public UserTO fetchUserAllUser(Long id) {
+	 * 
+	 * Optional<UserMaster> userMasterOpt = userMasterRepository.find(id); UserTO
+	 * user = modelMapper.map(userMasterOpt.get(), UserTO.class); // TODO
+	 * Auto-generated method stub
+	 * 
+	 * return user; }
+	 */
+
+	/*
+	 * public UserTO updateKeycloakName(Long userId) { Optional<UserMaster> userOpt
+	 * = userMasterRepository.findById(userId); UserMaster user = userOpt.get();
+	 * keycloakInvoker.updateKeycloakUserName(user); return modelMapper.map(user,
+	 * UserTO.class); }
+	 */
 
 }

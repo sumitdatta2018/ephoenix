@@ -16,7 +16,9 @@ import { Downloader, DownloadRequest, NotificationVisibility } from '@ionic-nati
 export class StudyMaterialPage implements OnInit {
 
   public studyMaterialList = [];
+  public originalStudyMaterialList = [];
   public userId: any;
+  public modifiedStudyMaterialList = [];
   constructor(private commonDataService: CommonDataService,
     private navCtrl: NavController,
     private androidPermissions: AndroidPermissions,
@@ -56,7 +58,9 @@ export class StudyMaterialPage implements OnInit {
             ...upload,
             fileExt: file.pop()
           }
-        })
+        });
+        this.originalStudyMaterialList = JSON.parse(JSON.stringify(this.studyMaterialList));
+        this.getModifiedStudyMaterialList();
       } else {
         if (data && data.error) {
           this.commonDataService.presentAlert(data.error.message)
@@ -70,6 +74,47 @@ export class StudyMaterialPage implements OnInit {
         this.navCtrl.navigateRoot('login');
         this.localStorage.clear();
       });
+  }
+
+  searchMaterial(searchText: string) {
+    this.studyMaterialList = JSON.parse(JSON.stringify(this.originalStudyMaterialList));
+    if (searchText.length > 0) {
+      this.studyMaterialList = this.studyMaterialList.filter(material => material.fileName.toLowerCase().includes(searchText));
+    } else {
+      this.studyMaterialList = JSON.parse(JSON.stringify(this.originalStudyMaterialList));
+    }
+    this.getModifiedStudyMaterialList();
+  }
+
+  getModifiedStudyMaterialList() {
+    let classlist = [];
+    this.modifiedStudyMaterialList = [];
+    this.studyMaterialList.forEach(material => {
+      if (classlist.indexOf(material.className) === -1) {
+        classlist.push(material.className);
+      }
+    });
+    classlist.forEach(className => {
+      let filterMaterialListByClass = this.studyMaterialList.filter(material => material.className === className);
+      let subjectList = [];
+      filterMaterialListByClass.forEach(material => {
+        if (subjectList.indexOf(material.subjectName) === -1) {
+          subjectList.push(material.subjectName);
+        }
+      });
+      let subjectArr = [];
+      subjectList.forEach(subject => {
+        let subjectObj = {
+          subjectName: subject,
+          files: this.studyMaterialList.filter(material => material.className === className && material.subjectName === subject)
+        }
+        subjectArr.push(subjectObj);
+      });
+      this.modifiedStudyMaterialList.push({
+        className: className,
+        subjects: subjectArr
+      })
+    });
   }
 
   async downloadFile(file) {

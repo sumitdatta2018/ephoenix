@@ -2,8 +2,12 @@ package com.ephoenix.lmsportal.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.ephoenix.lmsportal.entities.UserMaster;
 
@@ -23,5 +27,12 @@ public interface UserMasterRepository extends JpaRepository<UserMaster, Long>, J
 	UserMaster findByUserLoginIdIgnoreCaseAndIsActiveAndUserTypeId(String userId, Character isActive, Long typeId);
 
 	UserMaster findByIdAndIsActive(Long id, Character isActive);
+	
+	
+	@Query(value = "SELECT u FROM UserMaster as u join UserStudyMap as usm on usm.userId = u.id join StudyPlanEntity as s on s.studyPlanId = usm.studyPlanId  where s.studyPlanName = 'SPOKEN ENGLISH'")
+	public Page<UserMaster> findUsersAssociatedWithSpokenEnglish(Pageable pageable);
+
+	UserMaster findByEmailAndIsActive(String email, Character isActive);
+
 
 }

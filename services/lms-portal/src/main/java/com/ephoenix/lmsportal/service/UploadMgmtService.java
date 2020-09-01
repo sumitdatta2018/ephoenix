@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -22,6 +24,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.ephoenix.lmsportal.dto.UploadTO;
+import com.ephoenix.lmsportal.entities.ClassMaster;
+import com.ephoenix.lmsportal.entities.StudyPlanEntity;
+import com.ephoenix.lmsportal.entities.SubjectMaster;
 import com.ephoenix.lmsportal.entities.UploadEntity;
 import com.ephoenix.lmsportal.entities.UploadTypeMaster;
 import com.ephoenix.lmsportal.entities.UserStudyMap;
@@ -29,7 +34,10 @@ import com.ephoenix.lmsportal.excp.LMSPortalException;
 import com.ephoenix.lmsportal.generic.code.ActiveConstants;
 import com.ephoenix.lmsportal.generic.code.ErrorCode;
 import com.ephoenix.lmsportal.generic.code.MessageCode;
-import com.ephoenix.lmsportal.repository.StudyPlanMapRepository;
+import com.ephoenix.lmsportal.repository.UserStudyPlanMapRepository;
+import com.ephoenix.lmsportal.repository.ClassMasterRepository;
+import com.ephoenix.lmsportal.repository.StudyPlanRepository;
+import com.ephoenix.lmsportal.repository.SubjectMasterRepository;
 import com.ephoenix.lmsportal.repository.UploadMasterRepository;
 import com.ephoenix.lmsportal.repository.UploadTypeMasterRepository;
 import com.ephoenix.lmsportal.util.LMSUtil;
@@ -47,7 +55,16 @@ public class UploadMgmtService {
 	private UploadMasterRepository uploadMasterRepository;
 
 	@Autowired
-	private StudyPlanMapRepository studyPlanMapRepository;
+	private UserStudyPlanMapRepository studyPlanMapRepository;
+
+	@Autowired
+	private StudyPlanRepository studyPlanRepository;
+
+	@Autowired
+	private ClassMasterRepository classMasterRepository;
+
+	@Autowired
+	private SubjectMasterRepository subjectMasterRepository;
 
 	@Value("${upload.base.dir}")
 	private String uploadBaseDir;
@@ -125,6 +142,7 @@ public class UploadMgmtService {
 	public List<UploadTO> fetchtAllUploadDocs(List<Long> uploadTypeIds, Long userId) {
 		List<UploadEntity> uploadEntities = new ArrayList<>();
 		List<UploadTO> uploadTOs = new ArrayList<>();
+		Map<Long, StudyPlanEntity> studyPlanMapTemp = null;
 		UploadTypeMaster uploadTypeMaster = uploadTypeMasterRepository.findByUploadTypeAndIsActive("GALLERY",
 				ActiveConstants.ACTIVE.getIsActive());
 		if (!CollectionUtils.isEmpty(uploadTypeIds)) {
@@ -135,11 +153,35 @@ public class UploadMgmtService {
 					ActiveConstants.ACTIVE.getIsActive());
 			List<Long> studyPlanIds = userStudyMaps.stream().map(UserStudyMap::getStudyPlanId).distinct()
 					.collect(Collectors.toList());
+			studyPlanMapTemp = studyPlanRepository
+					.findByStudyPlanIdInAndIsActive(studyPlanIds, ActiveConstants.ACTIVE.getIsActive()).stream()
+					.collect(Collectors.toMap(StudyPlanEntity::getStudyPlanId, study -> study));
 			uploadEntities = uploadMasterRepository.findByStudyPlanIdInAndIsActive(studyPlanIds,
 					ActiveConstants.ACTIVE.getIsActive());
 		} else {
 			uploadEntities = uploadMasterRepository.findByIsActive(ActiveConstants.ACTIVE.getIsActive());
 		}
+		Map<Long, StudyPlanEntity> studyPlanMap = studyPlanMapTemp;
+		List<Long> classIds = new ArrayList<>();
+		List<Long> subjectIds = new ArrayList<>();
+		if (!CollectionUtils.isEmpty(studyPlanMap)) {
+
+			classIds = studyPlanMap.entrySet().stream().map(studyPlan -> studyPlan.getValue())
+					.filter(studyPlan -> studyPlan.getClassId() != null).map(StudyPlanEntity::getClassId)
+					.collect(Collectors.toList());
+			subjectIds = studyPlanMap.entrySet().stream().map(studyPlan -> studyPlan.getValue())
+					.filter(studyPlan -> studyPlan.getSubjectId() != null).map(StudyPlanEntity::getSubjectId)
+					.filter(subjectEntity -> subjectEntity != null).collect(Collectors.toList());
+
+		}
+
+		Map<Long, ClassMaster> classMasterMap = classMasterRepository
+				.findByClassIdInAndIsActive(classIds, ActiveConstants.ACTIVE.getIsActive()).stream()
+				.collect(Collectors.toMap(ClassMaster::getClassId, classMaster -> classMaster));
+		Map<Long, SubjectMaster> subjectMasterMap = subjectMasterRepository
+				.findBySubjectIdInAndIsActive(subjectIds, ActiveConstants.ACTIVE.getIsActive()).stream()
+				.collect(Collectors.toMap(SubjectMaster::getSubjectId, subjectMaster -> subjectMaster));
+
 		uploadEntities.stream().forEach(uploadEntity -> {
 			UploadTO uploadTO = modelMapper.map(uploadEntity, UploadTO.class);
 			uploadTO.setCompleteUploadPath(new StringBuffer(serverDns).append(uploadTO.getFilePath())
@@ -150,7 +192,14 @@ public class UploadMgmtService {
 						.append(uploadTO.getFileName().split("\\.")[0]).append("-").append("thumbnail").append(".")
 						.append(uploadTO.getFileName().split("\\.")[1]).toString());
 			}
+			if (!CollectionUtils.isEmpty(studyPlanMap)) {
+
+				StudyPlanEntity studyPlanEntity = studyPlanMap.get(uploadTO.getStudyPlanId());
+				uploadTO.setClassName(classMasterMap.get(studyPlanEntity.getClassId()).getClassName());
+				uploadTO.setSubjectName(subjectMasterMap.get(studyPlanEntity.getSubjectId()).getSubjectName());
+			}
 			uploadTOs.add(uploadTO);
+
 		});
 		return uploadTOs;
 
@@ -168,10 +217,10 @@ public class UploadMgmtService {
 		}
 		String filePath = uploadEntity.getFilePath();
 		String fileName = uploadEntity.getFileName();
-		
+
 		try {
-			Files.deleteIfExists(Paths.get(new StringBuffer().append(uploadBaseDir).append(filePath)
-					.append(fileName).toString()));
+			Files.deleteIfExists(
+					Paths.get(new StringBuffer().append(uploadBaseDir).append(filePath).append(fileName).toString()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -179,9 +228,9 @@ public class UploadMgmtService {
 		}
 		if (uploadTypeMaster.getUploadTypeId().equals(uploadEntity.getUploadTypeId())) {
 			try {
-				Files.deleteIfExists(Paths.get(new StringBuffer().append(uploadBaseDir).append(filePath)
-						.append(fileName.split("\\.")[0]).append("-").append("thumbnail.")
-						.append(fileName.split("\\.")[1]).toString()));
+				Files.deleteIfExists(Paths
+						.get(new StringBuffer().append(uploadBaseDir).append(filePath).append(fileName.split("\\.")[0])
+								.append("-").append("thumbnail.").append(fileName.split("\\.")[1]).toString()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

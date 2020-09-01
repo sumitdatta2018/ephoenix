@@ -26,7 +26,7 @@ import com.ephoenix.lmsportal.repository.StudyPlanRepository;
 import com.ephoenix.lmsportal.repository.StudyPlanTypeRepository;
 import com.ephoenix.lmsportal.repository.SubjectMasterRepository;
 import com.ephoenix.lmsportal.repository.TypeMasterRepository;
-import com.ephoenix.lmsportal.repository.StudyPlanMapRepository;
+import com.ephoenix.lmsportal.repository.UserStudyPlanMapRepository;
 import com.ephoenix.lmsportal.repository.UserTransactionRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class StudyPlanService {
 	private DistrictMasterRepository districtMasterRepository;
 
 	@Autowired
-	private StudyPlanMapRepository userPreamiumRepository;
+	private UserStudyPlanMapRepository userPreamiumRepository;
 
 	@Autowired
 	private UserTransactionRepository userTransactionRepository;

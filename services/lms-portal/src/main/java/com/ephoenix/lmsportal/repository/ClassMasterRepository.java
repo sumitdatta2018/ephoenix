@@ -13,6 +13,8 @@ public interface ClassMasterRepository extends JpaRepository<ClassMaster, Long>,
 	ClassMaster findByClassNameAndIsActive(String className, char isActive);
 
 	List<ClassMaster> findByIsActive(Character character);
+
+	List<ClassMaster> findByClassIdInAndIsActive(List<Long> classIds, Character isActive);
 	
 	
 

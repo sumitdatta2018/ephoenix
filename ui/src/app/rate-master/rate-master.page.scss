@@ -1,5 +1,33 @@
 ion-item {
-    border: 1px solid coral;
+    border: 1px solid #00000061;
     border-radius: 50px;
     margin: 5px;
+}
+
+ion-card-title {
+    color: brown !important;
+}
+
+ion-card-subtitle   {
+    color: black;
+    font-size: 20px;
+}
+
+ion-label {
+    font-family: 'phoenix-font' !important;
+    color: black;
+}
+
+ion-card {
+    font-family: 'phoenix-font' !important;
+    background-color: #d7d8da63;
+    box-shadow: 10px 10px 10px 0 #00000061;
+    ion-card-title {
+        font-size: 35px;
+        font-weight: 600;
+    }
+    ion-card-content {
+        font-size: 25px;
+        color: black;
+    }
 }

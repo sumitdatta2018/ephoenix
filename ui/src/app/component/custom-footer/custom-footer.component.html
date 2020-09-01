@@ -10,7 +10,12 @@
     </ion-col>
   </ion-row> -->
   <ion-row class="ion-justify-content-end">
-    <ion-col size-md="3" size="12">
+    <ion-col *ngIf="showPlayIcon" size-xl="3" size-lg="4" size-md="6" size="0">
+      <ion-item lines="none">
+        <a href='https://play.google.com/store/apps/details?id=com.thephoenix.app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' class="play-batch" src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+      </ion-item>
+    </ion-col>
+    <ion-col size-xl="3" size-lg="4" size-md="6" size="12">
       <ion-row class="ion-justify-content-end-sm"> 
         <ion-col size-md="3" size="3">
           <ion-item lines="none" (click)="openFB('ThePhoenixHelpline')">

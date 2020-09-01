@@ -7,7 +7,7 @@
         <ion-col *ngFor="let upload of notelist" size-xl="4" size-md="6" size="12">
           <ion-card (click)="downloadFile(upload)">
             <div>
-              <img class="file-img" *ngIf="upload.fileExt === 'pdf'" src="./assets/imgs/pdf-icon.png">
+              <img class="file-img" *ngIf="upload.fileExt === 'pdf'" src="./assets/imgs/pdf.png">
               <img class="file-img" *ngIf="upload.fileExt === 'docx' || upload.fileExt === 'doc'"
                 src="./assets/imgs/word-doc-icon.png">
               <img class="file-img" *ngIf="upload.fileExt === 'xlsx' || upload.fileExt === 'xls'"
@@ -30,7 +30,6 @@
                 src="./assets/imgs/document.png">
             </div>
             <ion-card-header class="card-header">
-              <ion-card-subtitle>{{upload.filePath}}</ion-card-subtitle>
               <ion-card-title>{{upload.fileName}}</ion-card-title>
             </ion-card-header>
           </ion-card>

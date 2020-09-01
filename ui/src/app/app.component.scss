@@ -50,10 +50,11 @@ ion-menu.md ion-list#inbox-list {
 }
 
 ion-menu.md ion-list#inbox-list ion-list-header {
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 600;
-
+  font-family: 'phoenix-font' !important;
   min-height: 20px;
+  color: #d7d8da;
 }
 
 ion-menu.md ion-list#labels-list ion-list-header {
@@ -132,9 +133,9 @@ ion-menu.ios ion-note {
 
 ion-note {
   display: inline-block;
-  font-size: 16px;
-
-  color: var(--ion-color-medium-shade);
+  font-size: 20px;
+  font-family: 'phoenix-font' !important;
+  color: #d7d8da
 }
 
 ion-item.selected {

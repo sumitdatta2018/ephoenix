@@ -13,4 +13,6 @@ public interface SubjectMasterRepository
 
 	List<SubjectMaster> findByIsActive(Character character);
 
+	List<SubjectMaster> findBySubjectIdInAndIsActive(List<Long> subjectIds, Character isActive);
+
 }

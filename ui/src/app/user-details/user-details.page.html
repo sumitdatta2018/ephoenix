@@ -1,0 +1,73 @@
+<ion-content>
+  <ion-icon class="close" (click)="dismiss()" name="close-circle-outline"></ion-icon>
+  <ion-row>
+    <ion-col>
+      <ion-card>
+        <ion-card-header class="card-header">
+          <ion-label class="inline">Name : </ion-label>
+          <ion-card-title>{{user.name}}</ion-card-title>
+          <ion-card-subtitle *ngIf="!user.aadharNum">***This user hasn't registered for spoken english***</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-row>
+            <ion-label class="block">Basic Details : </ion-label>
+            <ion-col size="12">
+              <span><b>Father's Name :</b> {{user.fatherName}}</span>
+            </ion-col>
+            <ion-col size="12">
+              <span><b>Mother's Name :</b> {{user.mothername}}</span>
+            </ion-col>
+            <ion-col size="6">
+              <span><b>Date of birth :</b> {{user.dob}}</span>
+            </ion-col>
+            <ion-col size="6">
+              <span><b>Gender :</b> {{user.gender}}</span>
+            </ion-col>
+            <ion-col size="6">
+              <span><b>Aadhaar No :</b> {{user.aadharNum}}</span>
+            </ion-col>
+            <ion-col size="6">
+              <span><b>Caste :</b> {{user.casteName}}</span>
+            </ion-col>
+            <ion-col size="6">
+              <span><b>Religion :</b> {{user.religionName}}</span>
+            </ion-col>            
+          </ion-row>
+          <ion-row>
+            <ion-label class="block">Contact Details : </ion-label>
+            <ion-col size="12">
+              <span><b>Email :</b> {{user.email}}</span>
+            </ion-col>
+            <ion-col size="12">
+              <span><b>Mobile :</b> {{user.mobile}}</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-label class="block">Communication Details : </ion-label>
+            <ion-col size="12">
+              <span><b>Address:</b> {{user.address}}</span>
+            </ion-col>
+            <ion-col>
+              <span><b>City:</b> {{user.city}}</span>
+            </ion-col>
+            <ion-col>
+              <span><b>District:</b> {{user.district}}</span>
+            </ion-col>
+            <ion-col>
+              <span><b>Pin:</b> {{user.pin}}</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-label class="block">Educational Details : </ion-label>
+            <ion-col size="12">
+              <span><b>Qualification :</b> {{user.lastQualification}}</span>
+            </ion-col>
+            <ion-col size="12">
+              <span><b>Institute Name :</b> {{user.instituteName}}</span>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

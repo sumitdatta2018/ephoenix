@@ -35,7 +35,8 @@ export class GallaryPage implements OnInit {
           let file = upload.fileName.split('.');
           return {
             ...upload,
-            fileExt: file.pop()
+            fileExt: file.pop(),
+            title: upload.fileName.substring(0,upload.fileName.length - 4),
           }
         })
       } else {

@@ -12,4 +12,6 @@ public interface ReligionMasterRepository extends JpaRepository<ReligionMaster, 
 
 	List<ReligionMaster> findByIsActive(Character character);
 
+	ReligionMaster findByReligionId(Long religionId);
+
 }

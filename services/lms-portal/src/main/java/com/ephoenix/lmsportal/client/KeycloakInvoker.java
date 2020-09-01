@@ -12,6 +12,8 @@ import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UserStorageProviderResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.admin.client.token.TokenManager;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -26,7 +28,10 @@ import org.springframework.web.client.RestTemplate;
 import com.ephoenix.lmsportal.dto.UserTO;
 import com.ephoenix.lmsportal.entities.UserMaster;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class KeycloakInvoker {
 
 	@Autowired
@@ -59,7 +64,8 @@ public class KeycloakInvoker {
 		UserRepresentation user = new UserRepresentation();
 		user.setEnabled(true);
 		user.setUsername(userTO.getUserLoginId());
-		user.setFirstName(userTO.getName());
+		user.setFirstName(userTO.getName().concat("|").concat(userTO.getId().toString()));
+
 		user.setEmail(userTO.getEmail());
 		// user.setAttributes(Collections.singletonMap("origin",
 		// Arrays.asList("demo")));
@@ -147,6 +153,21 @@ public class KeycloakInvoker {
 		passwordCred.setType(CredentialRepresentation.PASSWORD);
 		passwordCred.setValue("Welcome@12345");
 		userRessource.get("d28149c0-2f59-418e-8cfa-5f7f59762de7").resetPassword(passwordCred);
+	}
+
+	public void updateKeycloakUserName(UserMaster user) {
+		RealmResource realmResource = keycloak.realm("ephoenix");
+		UsersResource userRessource = realmResource.users();
+		try {
+			String userId = fetchKeycloakUserIdByUserLoginId(user);
+			UserResource existingUser = userRessource.get(userId);
+
+			UserRepresentation userRepresentation = new UserRepresentation();
+			userRepresentation.setFirstName(user.getName().concat("|").concat(user.getId().toString()));
+			existingUser.update(userRepresentation);
+		} catch (Exception e) {
+			log.info("failed for user:---{}", user);
+		}
 
 	}
 

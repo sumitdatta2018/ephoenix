@@ -89,4 +89,8 @@ export class RegistrationPage implements OnInit {
     })
   }
 
+  goToHome() {
+    this.navCtrl.navigateRoot('home');
+  }
+
 }

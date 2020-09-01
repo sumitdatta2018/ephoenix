@@ -86,6 +86,16 @@ const routes: Routes = [
     canActivate: [AuthenticationGuard],
   },
   {
+    path: 'user-management',
+    loadChildren: () => import('./user-management/user-management.module').then( m => m.UserManagementPageModule),
+    canActivate: [AuthenticationGuard],
+  },
+  {
+    path: 'feedback-list',
+    loadChildren: () => import('./feedback-list/feedback-list.module').then( m => m.FeedbackListPageModule),
+    canActivate: [AuthenticationGuard],
+  },
+  {
     path: 'upload',
     component: UploadTabPage,
     children: [
@@ -175,8 +185,12 @@ const routes: Routes = [
   {
     path: 'notice-master-edit',
     loadChildren: () => import('./notice-master-edit/notice-master-edit.module').then( m => m.NoticeMasterEditPageModule)
+  },  {
+    path: 'user-details',
+    loadChildren: () => import('./user-details/user-details.module').then( m => m.UserDetailsPageModule)
   },
-  ];
+
+];
 
 @NgModule({
   imports: [

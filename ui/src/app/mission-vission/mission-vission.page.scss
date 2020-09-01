@@ -1,16 +1,24 @@
-.item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
-    white-space: normal;
+// .item.sc-ion-label-md-h, .item .sc-ion-label-md-h {
+//     white-space: normal;
+// }
+
+// .item.sc-ion-label-ios-h, .item .sc-ion-label-ios-h {
+//     white-space: normal;
+// }
+ion-card-title {
+    color: brown !important;
 }
 
-.item.sc-ion-label-ios-h, .item .sc-ion-label-ios-h {
-    white-space: normal;
-}
-
-
-.item-native {
-    background-color: bisque !important;
-}
-
-.ion-list {
-    background-color: bisque;
+ion-card {
+    font-family: 'phoenix-font' !important;
+    background-color: #d7d8da63;
+    box-shadow: 10px 10px 10px 0 #00000061;
+    ion-card-title {
+        font-size: 35px;
+        font-weight: 600;
+    }
+    ion-card-content {
+        font-size: 25px;
+        color: black;
+    }
 }

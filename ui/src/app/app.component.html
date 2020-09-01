@@ -29,7 +29,7 @@
             <ion-list *ngIf="menu.submenu && selectedMenu == menu.name && aboutUsActive">
               <ion-item class="mar-left-20" lines="none" (click)="openPage(submenu)" *ngFor="let submenu of menu.submenu" [class.selected]="selectedMenu == submenu.name">
                 <ion-icon slot="start" name="school-outline" *ngIf="submenu.name === 'SCHOLARSHIP'"></ion-icon>
-                <ion-icon slot="start" name="information-circle-outline" *ngIf="submenu.name === 'IMPOTENT LINKS'"></ion-icon>
+                <ion-icon slot="start" name="information-circle-outline" *ngIf="submenu.name === 'IMPORTANT LINKS'"></ion-icon>
                 <ion-icon slot="start" name="call-outline" *ngIf="submenu.name === 'CONTACT US'"></ion-icon>
                 <ion-icon slot="start" name="rocket-outline" *ngIf="submenu.name === 'VISION & MISSION'"></ion-icon>
                 <ion-icon slot="start" name="timer-outline" *ngIf="submenu.name === 'HISTORY'"></ion-icon>
@@ -44,7 +44,8 @@
                 <ion-icon slot="start" name="wallet-outline" *ngIf="submenu.name === 'RATE MASTER'"></ion-icon>
                 <ion-icon slot="start" name="notifications-outline" *ngIf="submenu.name === 'NOTICE MASTER'"></ion-icon>
                 <ion-icon slot="start" name="cloud-upload-outline" *ngIf="submenu.name === 'UPLOAD MASTER'"></ion-icon>
-                <ion-icon slot="start" name="list-outline" *ngIf="submenu.name === 'USER LIST'"></ion-icon>
+                <ion-icon slot="start" name="people-outline" *ngIf="submenu.name === 'USER LIST'"></ion-icon>
+                <ion-icon slot="start" name="chatbubbles-outline" *ngIf="submenu.name === 'FEEDBACK LIST'"></ion-icon>
                 <ion-label>{{submenu.label}}</ion-label>
               </ion-item>
             </ion-list>
